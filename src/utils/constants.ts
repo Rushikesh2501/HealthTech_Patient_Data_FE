@@ -22,8 +22,6 @@ export const DATE_RANGE_PRESETS = [
   { label: 'Today', value: 'today' },
   { label: 'Last 7 Days', value: '7d' },
   { label: 'Last 30 Days', value: '30d' },
-  { label: 'Last 90 Days', value: '90d' },
-  { label: 'Custom', value: 'custom' },
 ] as const;
 
 export const COMMON_DIAGNOSES = [

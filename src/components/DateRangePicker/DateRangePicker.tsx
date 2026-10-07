@@ -35,26 +35,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
           </button>
         );
       })}
-
-      {value === 'custom' && (
-        <div className={styles.customInputs}>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => onCustomChange && onCustomChange(e.target.value, endDate)}
-            className={styles.dateInput}
-            aria-label="Start date"
-          />
-          <span className={styles.separator}>to</span>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => onCustomChange && onCustomChange(startDate, e.target.value)}
-            className={styles.dateInput}
-            aria-label="End date"
-          />
-        </div>
-      )}
     </div>
   );
 };
