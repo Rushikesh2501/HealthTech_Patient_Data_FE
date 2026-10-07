@@ -15,6 +15,7 @@ export const ROUTES = {
   ANALYTICS: '/analytics',
   AUDIT_LOGS: '/audit-logs',
   SETTINGS: '/settings',
+  RBAC: '/rbac',
 };
 
 export const DATE_RANGE_PRESETS = [

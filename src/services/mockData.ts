@@ -6,6 +6,13 @@ import { AuditLog } from '../types/audit';
 
 export const MOCK_USERS: User[] = [
   {
+    id: 0,
+    email: 'superadmin@3401.com',
+    name: 'SuperAdmin Authority',
+    role: 'superadmin',
+    designation: 'Root Security Administrator',
+  },
+  {
     id: 1,
     email: 'admin@healthtech.gov.in',
     name: 'Dr. Rajesh Sharma',

@@ -9,6 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   sessionExpiredMessage: string | null;
+  isSuperAdmin: boolean;
   login: (credentials: LoginCredentials) => Promise<User>;
   logout: () => Promise<void>;
   clearSessionExpiredMessage: () => void;
@@ -100,6 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated: Boolean(user),
     isLoading,
     sessionExpiredMessage,
+    isSuperAdmin: Boolean(user?.role && String(user.role).toLowerCase() === 'superadmin'),
     login,
     logout,
     clearSessionExpiredMessage,

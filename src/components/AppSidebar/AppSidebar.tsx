@@ -8,6 +8,7 @@ import {
   BarChart3,
   ShieldCheck,
   Settings,
+  Lock,
   LogOut,
   Activity,
   X,
@@ -25,7 +26,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   onCloseMobile,
   className = '',
 }) => {
-  const { user, logout, hasPermission } = useAuth();
+  const { user, logout, hasPermission, isSuperAdmin } = useAuth();
 
   const handleLinkClick = () => {
     if (onCloseMobile) {
@@ -66,12 +67,21 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Audit Logs',
       icon: <ShieldCheck size={19} />,
       permission: 'audit.read' as const,
+      superAdminOnly: false,
     },
     {
       to: ROUTES.SETTINGS,
       label: 'Settings',
       icon: <Settings size={19} />,
       permission: 'settings.manage' as const,
+      superAdminOnly: false,
+    },
+    {
+      to: ROUTES.RBAC,
+      label: 'RBAC Control',
+      icon: <Lock size={19} />,
+      permission: 'rbac.manage' as const,
+      superAdminOnly: true,
     },
   ];
 
@@ -122,11 +132,17 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           })}
         </div>
 
-        {/* Admin section only rendered if user has at least one admin permission */}
-        {adminNavItems.some((item) => hasPermission(item.permission)) && (
+        {/* Admin section only rendered if user has at least one visible admin item */}
+        {adminNavItems.some((item) => {
+          if (item.superAdminOnly && !isSuperAdmin) return false;
+          return hasPermission(item.permission);
+        }) && (
           <div className={styles.navSection}>
             <span className={styles.sectionHeader}>Administration</span>
             {adminNavItems.map((item) => {
+              if (item.superAdminOnly && !isSuperAdmin) {
+                return null;
+              }
               if (item.permission && !hasPermission(item.permission)) {
                 return null;
               }

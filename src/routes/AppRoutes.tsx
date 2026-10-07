@@ -12,6 +12,7 @@ import { Encounters } from '../pages/Encounters/Encounters';
 import { Analytics } from '../pages/Analytics/Analytics';
 import { AuditLogs } from '../pages/AuditLogs/AuditLogs';
 import { Settings } from '../pages/Settings/Settings';
+import { RbacControl } from '../pages/RbacControl/RbacControl';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -75,6 +76,16 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute requiredRole="admin" requiredPermission="settings.manage">
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* SuperAdmin exclusive RBAC Control */}
+        <Route
+          path={ROUTES.RBAC}
+          element={
+            <ProtectedRoute requiredRole="superadmin" requiredPermission="rbac.manage">
+              <RbacControl />
             </ProtectedRoute>
           }
         />
