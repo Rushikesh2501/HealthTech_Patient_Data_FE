@@ -14,6 +14,7 @@ export const ROUTES = {
   ENCOUNTERS: '/encounters',
   ANALYTICS: '/analytics',
   AUDIT_LOGS: '/audit-logs',
+  AUDIT_LOG_DETAILS: '/audit-logs/:id',
   SETTINGS: '/settings',
   RBAC: '/rbac',
 };

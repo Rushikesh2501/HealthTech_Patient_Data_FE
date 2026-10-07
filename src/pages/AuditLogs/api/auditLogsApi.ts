@@ -18,6 +18,25 @@ export const auditLogsApi = {
   },
 
   /**
+   * Fetch single audit event details by ID
+   */
+  async getAuditLogById(id: string): Promise<AuditLog | undefined> {
+    try {
+      const res = await apiClient.get<any>(`/audit-logs/${id}`);
+      if (res.data) {
+        return {
+          ...res.data,
+          id: String(res.data.id || id),
+        };
+      }
+    } catch {
+      // fallback to list search
+    }
+    const all = await auditLogsApi.getAuditLogs();
+    return all.find((item) => String(item.id) === String(id));
+  },
+
+  /**
    * Record a new security or transaction audit event
    */
   async logEvent(

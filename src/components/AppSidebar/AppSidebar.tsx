@@ -7,7 +7,6 @@ import {
   ClipboardList,
   BarChart3,
   ShieldCheck,
-  Settings,
   Lock,
   LogOut,
   Activity,
@@ -67,13 +66,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Audit Logs',
       icon: <ShieldCheck size={19} />,
       permission: 'audit.read' as const,
-      superAdminOnly: false,
-    },
-    {
-      to: ROUTES.SETTINGS,
-      label: 'Settings',
-      icon: <Settings size={19} />,
-      permission: 'settings.manage' as const,
       superAdminOnly: false,
     },
     {

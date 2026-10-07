@@ -11,6 +11,7 @@ import { PatientDetails } from '../pages/PatientDetails/PatientDetails';
 import { Encounters } from '../pages/Encounters/Encounters';
 import { Analytics } from '../pages/Analytics/Analytics';
 import { AuditLogs } from '../pages/AuditLogs/AuditLogs';
+import { AuditLogDetails } from '../pages/AuditLogs/AuditLogDetails';
 import { Settings } from '../pages/Settings/Settings';
 import { RbacControl } from '../pages/RbacControl/RbacControl';
 
@@ -68,6 +69,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute requiredRole="admin" requiredPermission="audit.read">
               <AuditLogs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.AUDIT_LOG_DETAILS}
+          element={
+            <ProtectedRoute requiredRole="admin" requiredPermission="audit.read">
+              <AuditLogDetails />
             </ProtectedRoute>
           }
         />

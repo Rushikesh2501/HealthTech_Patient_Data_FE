@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import styles from './AuditLogs.module.css';
 import { RotateCcw } from 'lucide-react';
@@ -8,6 +9,7 @@ import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { FilterSelect } from '../../components/FilterSelect/FilterSelect';
 import { DataTable, Column } from '../../components/DataTable/DataTable';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
+import { RowActions } from '../../components/RowActions/RowActions';
 import { auditLogsApi } from './api';
 import { AuditLog } from '../../types/audit';
 import { formatDateTime } from '../../utils/formatters';
@@ -21,6 +23,7 @@ const DEFAULT_ROLE_OPTIONS = [
 ];
 
 export const AuditLogs: React.FC = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -80,66 +83,55 @@ export const AuditLogs: React.FC = () => {
       header: 'Timestamp',
       sortable: true,
       accessor: 'timestamp',
-      cell: (row) => <span>{formatDateTime(row.timestamp)}</span>,
+      cell: (row) => (
+        <span style={{ fontWeight: 600, color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>
+          {formatDateTime(row.timestamp)}
+        </span>
+      ),
     },
     {
       id: 'user',
       header: 'User',
       sortable: true,
       accessor: 'user',
+      align: 'center',
+      hideOnMobile: true,
       cell: (row) => (
-        <div>
-          <p style={{ fontWeight: 600, fontSize: '13px' }}>{row.user}</p>
-          <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
-            IP: {row.ipAddress || 'Internal'}
-          </span>
-        </div>
+        <span style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text-primary)' }}>
+          {row.user}
+        </span>
       ),
-    },
-    {
-      id: 'role',
-      header: 'Role',
-      sortable: true,
-      accessor: 'role',
-      cell: (row) => <span style={{ fontWeight: 600, fontSize: '12px' }}>{row.role}</span>,
     },
     {
       id: 'action',
       header: 'Action',
       sortable: true,
       accessor: 'action',
+      align: 'center',
+      hideOnMobile: true,
       cell: (row) => {
         const badgeClass = (styles as any)[`action${row.action}`] || styles.actionLOGIN;
         return <span className={`${styles.actionBadge} ${badgeClass}`}>{row.action}</span>;
       },
     },
     {
-      id: 'entity',
-      header: 'Entity',
-      sortable: true,
-      accessor: 'entity',
-      cell: (row) => <span className={styles.entityBadge}>{row.entity}</span>,
-    },
-    {
-      id: 'entityId',
-      header: 'Entity ID',
-      accessor: 'entityId',
-      cell: (row) => <span className={styles.entityId}>{row.entityId}</span>,
-    },
-    {
       id: 'status',
       header: 'Status',
       sortable: true,
       accessor: 'status',
+      align: 'center',
       cell: (row) => <StatusBadge status={row.status} />,
     },
     {
-      id: 'details',
-      header: 'Event Context',
+      id: 'actions',
+      header: 'Actions',
+      align: 'center',
+      width: 100,
       cell: (row) => (
-        <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-          {row.details || '—'}
-        </span>
+        <RowActions
+          onView={() => navigate(`/audit-logs/${row.id}`, { state: { log: row } })}
+          viewTitle="View audit log details"
+        />
       ),
     },
   ];
