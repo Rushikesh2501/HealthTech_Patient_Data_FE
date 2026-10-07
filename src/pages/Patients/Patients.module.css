@@ -102,6 +102,8 @@
   justify-content: center;
   z-index: var(--z-modal-backdrop);
   padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .modalContent {
@@ -110,11 +112,14 @@
   box-shadow: var(--shadow-dropdown);
   max-width: 500px;
   width: 100%;
+  max-height: 90vh;
   padding: 24px;
   border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .modalHeader {

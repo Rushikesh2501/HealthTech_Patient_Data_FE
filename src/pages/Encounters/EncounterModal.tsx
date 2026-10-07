@@ -32,8 +32,6 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null
   );
-  const [hasDraftRestored, setHasDraftRestored] = useState(false);
-
   const defaultValues: Partial<EncounterSchemaType> = {
     patientId: initialPatientId || '',
     encounterDate: new Date().toISOString().slice(0, 10),
@@ -42,7 +40,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
     treatment: '',
     temperature: '',
     bloodPressure: '',
-    status: 'completed',
+    status: '' as any,
     notes: '',
   };
 
@@ -55,28 +53,28 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
   } = useForm<EncounterSchemaType>({
     resolver: zodResolver(encounterSchema),
     defaultValues,
+    mode: 'onChange',
   });
 
-  // Watch form fields to auto-save drafts locally when creating new encounter
   const formValues = watch();
 
+  const isFormFilled = Boolean(
+    formValues.patientId?.trim() &&
+    formValues.encounterDate?.trim() &&
+    formValues.symptoms?.trim() &&
+    formValues.diagnosis?.trim() &&
+    formValues.status?.trim() &&
+    formValues.treatment?.trim() &&
+    formValues.temperature?.trim() &&
+    formValues.bloodPressure?.trim()
+  );
+
   useEffect(() => {
-    if (!editingEncounter && isOpen) {
-      const savedDraft = localStorage.getItem(STORAGE_KEYS.ENCOUNTER_DRAFT);
-      if (savedDraft) {
-        try {
-          const parsed = JSON.parse(savedDraft);
-          reset({
-            ...defaultValues,
-            ...parsed,
-            patientId: initialPatientId || parsed.patientId || defaultValues.patientId,
-          });
-          setHasDraftRestored(true);
-          return;
-        } catch {
-          // ignore draft parse error
-        }
-      }
+    // Clear any previously saved draft from storage so old data never restores
+    try {
+      localStorage.removeItem(STORAGE_KEYS.ENCOUNTER_DRAFT);
+    } catch {
+      // ignore
     }
 
     if (editingEncounter) {
@@ -91,16 +89,32 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
         status: editingEncounter.status,
         notes: editingEncounter.notes || '',
       });
+    } else if (isOpen) {
+      reset({
+        patientId: initialPatientId || '',
+        encounterDate: new Date().toISOString().slice(0, 10),
+        symptoms: '',
+        diagnosis: '',
+        treatment: '',
+        temperature: '',
+        bloodPressure: '',
+        status: '' as any,
+        notes: '',
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingEncounter, isOpen, initialPatientId, reset]);
 
-  // Persist draft on changes (if not editing an existing record)
+  // Lock body scroll when modal is open
   useEffect(() => {
-    if (!editingEncounter && isOpen && formValues.symptoms) {
-      localStorage.setItem(STORAGE_KEYS.ENCOUNTER_DRAFT, JSON.stringify(formValues));
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-  }, [formValues, editingEncounter, isOpen]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -151,11 +165,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
     }
   };
 
-  const handleClearDraft = () => {
-    localStorage.removeItem(STORAGE_KEYS.ENCOUNTER_DRAFT);
-    reset(defaultValues);
-    setHasDraftRestored(false);
-  };
+
 
   return (
     <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
@@ -168,11 +178,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
             <p className={styles.subtitle}>
               Document real-time clinical observations, vitals, and treatment.
             </p>
-            {hasDraftRestored && !editingEncounter && (
-              <span className={styles.draftNotice}>
-                ✓ Auto-restored previously saved encounter draft
-              </span>
-            )}
+
           </div>
           <button
             type="button"
@@ -184,13 +190,12 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form} noValidate>
           <div className={styles.body}>
             {feedback && (
               <div
-                className={`${styles.feedbackAlert} ${
-                  feedback.type === 'success' ? styles.successAlert : styles.errorAlert
-                }`}
+                className={`${styles.feedbackAlert} ${feedback.type === 'success' ? styles.successAlert : styles.errorAlert
+                  }`}
                 role="alert"
               >
                 {feedback.type === 'success' ? (
@@ -257,6 +262,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 as="select"
                 label="Encounter Status"
                 error={errors.status?.message as string | undefined}
+                required
                 {...register('status')}
               >
                 <option value="" disabled>Select encounter status...</option>
@@ -283,7 +289,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 label="Body Temperature (°F)"
                 type="text"
                 placeholder="e.g. 98.6"
-                hint="Normal: 97.0 - 99.0°F"
+                // hint="Normal: 97.0 - 99.0°F"
                 error={errors.temperature?.message}
                 required
                 {...register('temperature')}
@@ -293,7 +299,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 label="Blood Pressure (mmHg)"
                 type="text"
                 placeholder="e.g. 120/80"
-                hint="Format: Systolic/Diastolic"
+                // hint="Format: Systolic/Diastolic"
                 error={errors.bloodPressure?.message}
                 required
                 {...register('bloodPressure')}
@@ -310,17 +316,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
           </div>
 
           <div className={styles.footer}>
-            <div>
-              {hasDraftRestored && !editingEncounter && (
-                <SecondaryButton
-                  type="button"
-                  size="sm"
-                  onClick={handleClearDraft}
-                >
-                  Clear Draft
-                </SecondaryButton>
-              )}
-            </div>
+
 
             <div className={styles.footerRight}>
               <SecondaryButton type="button" onClick={onClose} disabled={isSubmitting}>
@@ -328,6 +324,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
               </SecondaryButton>
               <PrimaryButton
                 type="submit"
+                disabled={!isFormFilled || isSubmitting}
                 isLoading={isSubmitting || createMutation.isPending || updateMutation.isPending}
                 icon={<Save size={16} />}
               >

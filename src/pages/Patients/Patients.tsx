@@ -35,7 +35,6 @@ export const Patients: React.FC = () => {
   // Filters state
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [genderFilter, setGenderFilter] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
 
   // Modal & ConfirmDialog state
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -69,6 +68,17 @@ export const Patients: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state, canCreate]);
+
+  // Lock body scroll when patient modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isModalOpen]);
 
   const handleOpenModal = (patient?: Patient) => {
     if (patient) {
@@ -132,10 +142,9 @@ export const Patients: React.FC = () => {
   const clearFilters = () => {
     setSearchTerm('');
     setGenderFilter('');
-    setStatusFilter('');
   };
 
-  const hasActiveFilters = Boolean(searchTerm || genderFilter || statusFilter);
+  const hasActiveFilters = Boolean(searchTerm || genderFilter);
 
   const filteredPatients = useMemo(() => {
     return patients.filter((patient) => {
@@ -146,11 +155,10 @@ export const Patients: React.FC = () => {
         (patient.district && patient.district.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesGender = !genderFilter || patient.gender === genderFilter;
-      const matchesStatus = !statusFilter || patient.status === statusFilter;
 
-      return matchesSearch && matchesGender && matchesStatus;
+      return matchesSearch && matchesGender;
     });
-  }, [patients, searchTerm, genderFilter, statusFilter]);
+  }, [patients, searchTerm, genderFilter]);
 
   const columns: Column<Patient>[] = [
     {
@@ -236,16 +244,6 @@ export const Patients: React.FC = () => {
             options={GENDER_OPTIONS}
             onChange={setGenderFilter}
             placeholder="All Genders"
-          />
-
-          <FilterSelect
-            value={statusFilter}
-            options={[
-              { label: 'Active', value: 'active' },
-              { label: 'Inactive', value: 'inactive' },
-            ]}
-            onChange={setStatusFilter}
-            placeholder="All Statuses"
           />
 
           <button

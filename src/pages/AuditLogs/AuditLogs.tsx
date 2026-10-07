@@ -6,25 +6,23 @@ import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { PageHeader } from '../../components/PageHeader/PageHeader';
 import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { FilterSelect } from '../../components/FilterSelect/FilterSelect';
-import { SecondaryButton } from '../../components/SecondaryButton/SecondaryButton';
 import { DataTable, Column } from '../../components/DataTable/DataTable';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { auditLogsApi } from './api';
 import { AuditLog } from '../../types/audit';
 import { formatDateTime } from '../../utils/formatters';
 
-const ACTION_OPTIONS = [
-  { label: 'CREATE', value: 'CREATE' },
-  { label: 'UPDATE', value: 'UPDATE' },
-  { label: 'DELETE', value: 'DELETE' },
-  { label: 'LOGIN', value: 'LOGIN' },
-  { label: 'LOGIN_FAILED', value: 'LOGIN_FAILED' },
-  { label: 'UNAUTHORIZED_ACCESS', value: 'UNAUTHORIZED_ACCESS' },
+const DEFAULT_ROLE_OPTIONS = [
+  { label: 'Admin', value: 'ADMIN' },
+  { label: 'Clinician', value: 'CLINICIAN' },
+  { label: 'Nurse', value: 'NURSE' },
+  { label: 'Superadmin', value: 'SUPERADMIN' },
+  { label: 'Anonymous', value: 'ANONYMOUS' },
 ];
 
 export const AuditLogs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [actionFilter, setActionFilter] = useState<string>('');
+  const [roleFilter, setRoleFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
 
   const {
@@ -37,11 +35,28 @@ export const AuditLogs: React.FC = () => {
     queryFn: () => auditLogsApi.getAuditLogs(),
   });
 
+  const roleOptions = useMemo(() => {
+    const options = [...DEFAULT_ROLE_OPTIONS];
+    const existing = new Set(options.map((o) => o.value.toUpperCase()));
+    logs.forEach((log) => {
+      if (log.role && !existing.has(log.role.toUpperCase())) {
+        existing.add(log.role.toUpperCase());
+        options.push({
+          label: log.role.charAt(0).toUpperCase() + log.role.slice(1).toLowerCase(),
+          value: log.role.toUpperCase(),
+        });
+      }
+    });
+    return options;
+  }, [logs]);
+
   const clearFilters = () => {
     setSearchTerm('');
-    setActionFilter('');
+    setRoleFilter('');
     setStatusFilter('');
   };
+
+  const hasActiveFilters = Boolean(searchTerm || roleFilter || statusFilter);
 
   const filteredLogs = useMemo(() => {
     return logs.filter((log) => {
@@ -52,12 +67,12 @@ export const AuditLogs: React.FC = () => {
         log.entityId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (log.details && log.details.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      const matchesAction = !actionFilter || log.action === actionFilter;
+      const matchesRole = !roleFilter || log.role?.toLowerCase() === roleFilter.toLowerCase();
       const matchesStatus = !statusFilter || log.status === statusFilter;
 
-      return matchesSearch && matchesAction && matchesStatus;
+      return matchesSearch && matchesRole && matchesStatus;
     });
-  }, [logs, searchTerm, actionFilter, statusFilter]);
+  }, [logs, searchTerm, roleFilter, statusFilter]);
 
   const columns: Column<AuditLog>[] = [
     {
@@ -137,18 +152,20 @@ export const AuditLogs: React.FC = () => {
       />
 
       <div className={styles.toolbar}>
-        <SearchBar
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder="Search by user, entity, or event details..."
-        />
+        <div className={styles.searchContainer}>
+          <SearchBar
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by user, entity, or event details..."
+          />
+        </div>
 
         <div className={styles.filtersGroup}>
           <FilterSelect
-            value={actionFilter}
-            options={ACTION_OPTIONS}
-            onChange={setActionFilter}
-            placeholder="All Actions"
+            value={roleFilter}
+            options={roleOptions}
+            onChange={setRoleFilter}
+            placeholder="All Roles"
           />
 
           <FilterSelect
@@ -161,11 +178,17 @@ export const AuditLogs: React.FC = () => {
             placeholder="All Statuses"
           />
 
-          {(searchTerm || actionFilter || statusFilter) && (
-            <SecondaryButton icon={<RotateCcw size={14} />} onClick={clearFilters} size="sm">
-              Clear Filters
-            </SecondaryButton>
-          )}
+          <button
+            type="button"
+            className={styles.clearFiltersBtn}
+            onClick={clearFilters}
+            disabled={!hasActiveFilters}
+            aria-label="Clear filters"
+            title={hasActiveFilters ? 'Clear all active filters' : 'No active filters to clear'}
+          >
+            <RotateCcw size={14} />
+            <span>Clear Filters</span>
+          </button>
         </div>
       </div>
 

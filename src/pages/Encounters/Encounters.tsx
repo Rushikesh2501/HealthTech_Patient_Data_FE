@@ -5,7 +5,6 @@ import { PlusCircle, RotateCcw } from 'lucide-react';
 import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { PageHeader } from '../../components/PageHeader/PageHeader';
 import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
-import { SecondaryButton } from '../../components/SecondaryButton/SecondaryButton';
 import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { FilterSelect } from '../../components/FilterSelect/FilterSelect';
 import { DataTable, Column } from '../../components/DataTable/DataTable';
@@ -71,6 +70,8 @@ export const Encounters: React.FC = () => {
     setStatusFilter('');
     setDateFilter('');
   };
+
+  const hasActiveFilters = Boolean(searchTerm || diagnosisFilter || statusFilter || dateFilter);
 
   const filteredEncounters = useMemo(() => {
     return encounters.filter((enc) => {
@@ -190,11 +191,13 @@ export const Encounters: React.FC = () => {
 
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <SearchBar
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder="Search by ID, symptoms, clinician..."
-        />
+        <div className={styles.searchContainer}>
+          <SearchBar
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by ID, symptoms, clinician..."
+          />
+        </div>
 
         <div className={styles.filtersGroup}>
           <FilterSelect
@@ -225,15 +228,17 @@ export const Encounters: React.FC = () => {
             aria-label="Filter by encounter date"
           />
 
-          {(searchTerm || diagnosisFilter || statusFilter || dateFilter) && (
-            <SecondaryButton
-              icon={<RotateCcw size={14} />}
-              onClick={clearFilters}
-              size="sm"
-            >
-              Clear Filters
-            </SecondaryButton>
-          )}
+          <button
+            type="button"
+            className={styles.clearFiltersBtn}
+            onClick={clearFilters}
+            disabled={!hasActiveFilters}
+            aria-label="Clear filters"
+            title={hasActiveFilters ? 'Clear all active filters' : 'No active filters to clear'}
+          >
+            <RotateCcw size={14} />
+            <span>Clear Filters</span>
+          </button>
         </div>
       </div>
 

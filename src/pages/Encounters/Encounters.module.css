@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 16px 20px;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -11,11 +11,49 @@
   box-shadow: var(--shadow-sm);
 }
 
+.searchContainer {
+  flex: 1;
+  min-width: 0;
+}
+
 .filtersGroup {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.clearFiltersBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  background-color: var(--color-primary-subtle);
+  border: 1px solid var(--color-primary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.clearFiltersBtn:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(47, 139, 194, 0.25);
+}
+
+.clearFiltersBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(47, 139, 194, 0.35);
+  background-color: rgba(47, 139, 194, 0.05);
+  color: var(--color-primary);
+  box-shadow: none;
 }
 
 .encounterBadge {
@@ -47,4 +85,35 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+
+  .filtersGroup {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .filtersGroup > div,
+  .filtersGroup > input {
+    flex: 1;
+    min-width: 130px;
+  }
+
+  .clearFiltersBtn {
+    width: 100%;
+    padding: 10px 14px;
+    justify-content: center;
+  }
 }
