@@ -1,0 +1,70 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Green */
+.completed, .active {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-border);
+}
+.completed .dot, .active .dot {
+  background-color: var(--color-success);
+}
+
+/* Blue */
+.scheduled {
+  background-color: var(--color-info-light);
+  color: var(--color-info);
+  border: 1px solid var(--color-info-border);
+}
+.scheduled .dot {
+  background-color: var(--color-info);
+}
+
+/* Orange */
+.pending {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning-border);
+}
+.pending .dot {
+  background-color: var(--color-warning);
+}
+
+/* Red */
+.cancelled, .failed {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-border);
+}
+.cancelled .dot, .failed .dot {
+  background-color: var(--color-danger);
+}
+
+/* Gray */
+.inactive {
+  background-color: var(--color-inactive-light);
+  color: var(--color-inactive);
+  border: 1px solid var(--color-inactive-border);
+}
+.inactive .dot {
+  background-color: var(--color-inactive);
+}

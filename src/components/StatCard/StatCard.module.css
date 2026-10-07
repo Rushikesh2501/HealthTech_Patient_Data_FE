@@ -1,0 +1,96 @@
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  min-width: 0;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #BACDDF;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.15;
+}
+
+.trendRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  margin-top: 4px;
+}
+
+.trendPositive {
+  color: var(--color-success);
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.trendNegative {
+  color: var(--color-danger);
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.trendLabel {
+  color: var(--color-text-muted);
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Color variations */
+.blue {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.green {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.orange {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.purple {
+  background-color: #F3E8FF;
+  color: #8B5CF6;
+}

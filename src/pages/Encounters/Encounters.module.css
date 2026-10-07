@@ -1,0 +1,50 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.filtersGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.encounterBadge {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-light);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.patientLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.patientLink:hover {
+  text-decoration: underline;
+}
+
+.truncateText {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
