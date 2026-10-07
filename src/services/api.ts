@@ -2,8 +2,11 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { STORAGE_KEYS } from '../utils/constants';
 
 const getBaseURL = () => {
-  const envUrl = process.env.REACT_APP_API_URL?.trim();
+  let envUrl = process.env.REACT_APP_API_URL?.trim();
   if (!envUrl) return 'http://localhost:8000/api/v1';
+  if (!envUrl.startsWith('http://') && !envUrl.startsWith('https://')) {
+    envUrl = `https://${envUrl}`;
+  }
   const clean = envUrl.replace(/\/+$/, '');
   if (!clean.endsWith('/api/v1') && !clean.endsWith('/api')) {
     return `${clean}/api/v1`;
