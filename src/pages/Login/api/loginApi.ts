@@ -69,6 +69,36 @@ export const loginApi = {
       return null;
     }
   },
+
+  /**
+   * Change password and invalidate active session tokens
+   */
+  async changePassword(data: {
+    old_password?: string;
+    oldPassword?: string;
+    new_password?: string;
+    newPassword?: string;
+  }): Promise<{ message: string }> {
+    try {
+      const res = await apiClient.post<{ message: string }>('/auth/change-password', {
+        old_password: data.old_password || data.oldPassword,
+        new_password: data.new_password || data.newPassword,
+      });
+      return res.data;
+    } catch (err: any) {
+      if (err.response?.data?.error?.message) {
+        throw new Error(err.response.data.error.message);
+      }
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+      }
+      if (err.message) {
+        throw new Error(err.message);
+      }
+      throw new Error('Failed to update password. Please check your current password.');
+    }
+  },
 };
 
 export default loginApi;

@@ -11,6 +11,7 @@ export const MOCK_USERS: User[] = [
     name: 'SuperAdmin Authority',
     role: 'superadmin',
     designation: 'Root Security Administrator',
+    phoneNumber: '+91 98201 12345',
   },
   {
     id: 1,
@@ -18,6 +19,7 @@ export const MOCK_USERS: User[] = [
     name: 'Dr. Rajesh Sharma',
     role: 'admin',
     designation: 'Chief Medical Administrator',
+    phoneNumber: '+91 98202 54321',
   },
   {
     id: 2,
@@ -25,6 +27,7 @@ export const MOCK_USERS: User[] = [
     name: 'Dr. Ananya Roy',
     role: 'clinician',
     designation: 'Telemedicine Specialist',
+    phoneNumber: '+91 98203 67890',
   },
   {
     id: 3,
@@ -32,6 +35,7 @@ export const MOCK_USERS: User[] = [
     name: 'Pooja Verma',
     role: 'nurse',
     designation: 'Community Health Nurse',
+    phoneNumber: '+91 98204 98765',
   },
 ];
 

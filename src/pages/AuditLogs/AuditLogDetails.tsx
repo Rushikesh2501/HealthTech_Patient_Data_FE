@@ -6,6 +6,7 @@ import listStyles from './AuditLogs.module.css';
 import { ArrowLeft, Clock, Shield, Database, FileText } from 'lucide-react';
 import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { PageHeader } from '../../components/PageHeader/PageHeader';
+import { SecondaryButton } from '../../components/SecondaryButton/SecondaryButton';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 import { ErrorState } from '../../components/ErrorState/ErrorState';
@@ -45,10 +46,13 @@ export const AuditLogDetails: React.FC = () => {
   if (isError || !log) {
     return (
       <PageContainer>
-        <button onClick={() => navigate(ROUTES.AUDIT_LOGS)} className={styles.backButton}>
-          <ArrowLeft size={16} />
-          <span>Back to Security & Audit Logs</span>
-        </button>
+        <SecondaryButton
+          icon={<ArrowLeft size={16} />}
+          onClick={() => navigate(ROUTES.AUDIT_LOGS)}
+          style={{ width: 'fit-content', marginBottom: '16px' }}
+        >
+          Back to Audit Logs
+        </SecondaryButton>
         <ErrorState
           title="Audit Record Not Found"
           message="Could not find an audit event with the specified ID."
@@ -63,14 +67,17 @@ export const AuditLogDetails: React.FC = () => {
 
   return (
     <PageContainer>
-      <button onClick={() => navigate(ROUTES.AUDIT_LOGS)} className={styles.backButton}>
-        <ArrowLeft size={16} />
-        <span>Back to Security & Audit Logs</span>
-      </button>
-
       <PageHeader
         title={`Audit Event: ${log.action}`}
         subtitle="Immutable security trail monitoring administrative access, CRUD transactions, and RBAC enforcement."
+        action={
+          <SecondaryButton
+            icon={<ArrowLeft size={16} />}
+            onClick={() => navigate(ROUTES.AUDIT_LOGS)}
+          >
+            Back to Audit Logs
+          </SecondaryButton>
+        }
       />
 
       {/* Prominent Timestamp Hero Card */}

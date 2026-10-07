@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import styles from './Settings.module.css';
-import { Shield, Server, Database, Key } from 'lucide-react';
+import { Shield, Server, Database, Key, KeyRound, Lock } from 'lucide-react';
 import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { PageHeader } from '../../components/PageHeader/PageHeader';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
+import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
+import { ChangePasswordModal } from '../../components/ChangePasswordModal';
+import { useAuth } from '../../hooks/useAuth';
 import { settingsApi } from './api';
 
 export const Settings: React.FC = () => {
+  const { user } = useAuth();
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
   const { data: config } = useQuery({
     queryKey: ['settings'],
     queryFn: () => settingsApi.getSystemSettings(),
@@ -21,6 +27,52 @@ export const Settings: React.FC = () => {
       />
 
       <div className={styles.cardGrid}>
+        {/* Account Security & Password Management */}
+        <div className={styles.securityCard}>
+          <div className={styles.cardHeader}>
+            <div
+              className={styles.iconWrapper}
+              style={{ backgroundColor: 'rgba(37, 99, 235, 0.12)', color: 'var(--color-primary)' }}
+            >
+              <KeyRound size={20} />
+            </div>
+            <div>
+              <h3 className={styles.title}>Account Security & Password Management</h3>
+              <p className={styles.subtitle}>Manage authentication credentials and self-service password reset</p>
+            </div>
+          </div>
+          <div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>Authenticated User</span>
+              <span className={styles.value}>
+                {user?.name || 'Healthcare Practitioner'} ({user?.email || 'N/A'})
+              </span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>Assigned Role</span>
+              <span className={styles.value}>{user?.role ? user.role.toUpperCase() : 'USER'}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>Password Policy</span>
+              <span className={styles.value}>Minimum 8 characters with auto-session invalidation</span>
+            </div>
+          </div>
+          <div className={styles.securityActionRow}>
+            <p className={styles.securityNote}>
+              Need to update your temporary or existing password? You can securely reset it here. Note that
+              resetting your password will automatically log you out and require you to sign in again with your
+              new credentials.
+            </p>
+            <PrimaryButton
+              type="button"
+              onClick={() => setIsPasswordModalOpen(true)}
+              icon={<Lock size={16} />}
+            >
+              Change Password
+            </PrimaryButton>
+          </div>
+        </div>
+
         {/* Backend Connectivity */}
         <div className={styles.settingsCard}>
           <div className={styles.cardHeader}>
@@ -131,6 +183,11 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
     </PageContainer>
   );
 };

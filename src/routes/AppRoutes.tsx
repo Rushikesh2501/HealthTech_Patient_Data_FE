@@ -12,6 +12,7 @@ import { Encounters } from '../pages/Encounters/Encounters';
 import { Analytics } from '../pages/Analytics/Analytics';
 import { AuditLogs } from '../pages/AuditLogs/AuditLogs';
 import { AuditLogDetails } from '../pages/AuditLogs/AuditLogDetails';
+import { Users } from '../pages/Users/Users';
 import { Settings } from '../pages/Settings/Settings';
 import { RbacControl } from '../pages/RbacControl/RbacControl';
 
@@ -59,6 +60,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute requiredPermission="analytics.read">
               <Analytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.USERS}
+          element={
+            <ProtectedRoute>
+              <Users />
             </ProtectedRoute>
           }
         />

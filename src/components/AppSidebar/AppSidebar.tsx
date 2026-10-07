@@ -4,6 +4,7 @@ import styles from './AppSidebar.module.css';
 import {
   LayoutDashboard,
   Users,
+  UserCog,
   ClipboardList,
   BarChart3,
   ShieldCheck,
@@ -61,6 +62,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   ];
 
   const adminNavItems = [
+    {
+      to: ROUTES.USERS,
+      label: 'Users',
+      icon: <UserCog size={19} />,
+      permission: null,
+      superAdminOnly: false,
+    },
     {
       to: ROUTES.AUDIT_LOGS,
       label: 'Audit Logs',
@@ -127,6 +135,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         {/* Admin section only rendered if user has at least one visible admin item */}
         {adminNavItems.some((item) => {
           if (item.superAdminOnly && !isSuperAdmin) return false;
+          if (!item.permission) return true;
           return hasPermission(item.permission);
         }) && (
           <div className={styles.navSection}>

@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './RbacControl.module.css';
-import { ShieldCheck, Check, Minus } from 'lucide-react';
+import { ShieldCheck, Check, Minus, Pencil, Save, X } from 'lucide-react';
 import { PageContainer } from '../../components/PageContainer/PageContainer';
-import { PageHeader } from '../../components/PageHeader/PageHeader';
+import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
+import { SecondaryButton } from '../../components/SecondaryButton/SecondaryButton';
 import { useAuth } from '../../hooks/useAuth';
-import { ROLE_PERMISSIONS, Permission } from '../../utils/permissions';
+import {
+  Permission,
+  getRolePermissions,
+  saveRolePermissions,
+} from '../../utils/permissions';
 import { UserRole } from '../../types/user';
 
 interface MatrixRow {
@@ -25,11 +30,9 @@ const MATRIX_ROWS: MatrixRow[] = [
   { label: 'Epidemiological Trends & AI', key: 'analytics.read', resource: 'Analytics' },
   { label: 'Immutable Audit Trail', key: 'audit.read', resource: 'Audit Logs' },
   { label: 'System & Gateway Config', key: 'settings.manage', resource: 'Settings' },
-  { label: 'RBAC Policy Governance', key: 'rbac.manage', resource: 'Security Engine' },
 ];
 
 const ROLES: { id: UserRole; label: string; badgeClass: string }[] = [
-  { id: 'superadmin', label: 'SUPERADMIN', badgeClass: styles.roleBadgeSuperadmin },
   { id: 'admin', label: 'ADMIN', badgeClass: styles.roleBadgeAdmin },
   { id: 'clinician', label: 'CLINICIAN', badgeClass: styles.roleBadgeClinician },
   { id: 'nurse', label: 'NURSE', badgeClass: styles.roleBadgeNurse },
@@ -38,13 +41,51 @@ const ROLES: { id: UserRole; label: string; badgeClass: string }[] = [
 export const RbacControl: React.FC = () => {
   const { user } = useAuth();
 
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState<Record<UserRole, Permission[]>>(() =>
+    getRolePermissions()
+  );
+  const [draftPermissions, setDraftPermissions] = useState<Record<UserRole, Permission[]>>(() =>
+    getRolePermissions()
+  );
+  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+
+  const handleStartEdit = () => {
+    setDraftPermissions(permissions);
+    setIsEditing(true);
+    setSaveSuccess(false);
+  };
+
+  const handleCancel = () => {
+    setDraftPermissions(permissions);
+    setIsEditing(false);
+  };
+
+  const handleTogglePermission = (role: UserRole, perm: Permission) => {
+    setDraftPermissions((prev) => {
+      const currentList = prev[role] || [];
+      const updated = currentList.includes(perm)
+        ? currentList.filter((p) => p !== perm)
+        : [...currentList, perm];
+      return {
+        ...prev,
+        [role]: updated,
+      };
+    });
+  };
+
+  const handleSave = () => {
+    saveRolePermissions(draftPermissions);
+    setPermissions(draftPermissions);
+    setIsEditing(false);
+    setSaveSuccess(true);
+    setTimeout(() => {
+      setSaveSuccess(false);
+    }, 4000);
+  };
+
   return (
     <PageContainer>
-      <PageHeader
-        title="RBAC Control & Security Governance"
-        subtitle="SuperAdmin restricted management console for clinical roles, capability matrix, and security policies."
-      />
-
       <div className={styles.container}>
         {/* SuperAdmin Authority Banner */}
         <div className={styles.clearanceBanner}>
@@ -53,7 +94,7 @@ export const RbacControl: React.FC = () => {
               <ShieldCheck size={26} />
             </div>
             <div>
-              <h2 className={styles.clearanceTitle}>SuperAdmin Security Authority Active</h2>
+              <h2 className={styles.clearanceTitle}>RBAC Control & Security Governance</h2>
               <p className={styles.clearanceSubtitle}>
                 Authenticated Operator: <strong>{user?.name}</strong> ({user?.email}) • Full system governance and override authority enabled.
               </p>
@@ -66,12 +107,12 @@ export const RbacControl: React.FC = () => {
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
             <span className={styles.statLabel}>Configured Roles</span>
-            <span className={styles.statValue}>4</span>
-            <span className={styles.statHint}>SuperAdmin, Admin, Clinician, Nurse</span>
+            <span className={styles.statValue}>{ROLES.length}</span>
+            <span className={styles.statHint}>Admin, Clinician, Nurse</span>
           </div>
           <div className={styles.statCard}>
             <span className={styles.statLabel}>Governed Capabilities</span>
-            <span className={styles.statValue}>12</span>
+            <span className={styles.statValue}>{MATRIX_ROWS.length}</span>
             <span className={styles.statHint}>Granular clinical & admin permissions</span>
           </div>
           <div className={styles.statCard}>
@@ -92,10 +133,51 @@ export const RbacControl: React.FC = () => {
             <div>
               <h3 className={styles.matrixTitle}>Clinical Capability & Access Matrix</h3>
               <p className={styles.matrixSubtitle}>
-                Evaluation of active permission grants across all clinical user roles.
+                {isEditing
+                  ? 'Editing permissions: check or uncheck options to grant or revoke capabilities per role.'
+                  : 'Evaluation of active permission grants across all clinical user roles.'}
               </p>
             </div>
+
+            <div className={styles.headerActions}>
+              {!isEditing ? (
+                <PrimaryButton
+                  icon={<Pencil size={16} />}
+                  onClick={handleStartEdit}
+                  className={styles.actionBtn}
+                  aria-label="Edit role permissions"
+                >
+                  Edit Permissions
+                </PrimaryButton>
+              ) : (
+                <div className={styles.editBtnGroup}>
+                  <SecondaryButton
+                    icon={<X size={16} />}
+                    onClick={handleCancel}
+                    className={styles.actionBtn}
+                    aria-label="Cancel editing"
+                  >
+                    Cancel
+                  </SecondaryButton>
+                  <PrimaryButton
+                    icon={<Save size={16} />}
+                    onClick={handleSave}
+                    className={styles.actionBtn}
+                    aria-label="Save changes"
+                  >
+                    Save Changes
+                  </PrimaryButton>
+                </div>
+              )}
+            </div>
           </div>
+
+          {saveSuccess && (
+            <div className={styles.successBanner} role="status">
+              <Check size={16} strokeWidth={2.5} />
+              <span>Role permissions updated and actively enforced across the application.</span>
+            </div>
+          )}
 
           <div className={styles.tableWrapper}>
             <table className={styles.matrixTable}>
@@ -119,10 +201,23 @@ export const RbacControl: React.FC = () => {
                     </td>
                     <td>{row.resource}</td>
                     {ROLES.map((r) => {
-                      const hasPerm = ROLE_PERMISSIONS[r.id].includes(row.key);
+                      const hasPerm = isEditing
+                        ? draftPermissions[r.id]?.includes(row.key)
+                        : permissions[r.id]?.includes(row.key);
+
                       return (
                         <td key={r.id} className={styles.centerCol}>
-                          {hasPerm ? (
+                          {isEditing ? (
+                            <label className={styles.checkboxWrapper}>
+                              <input
+                                type="checkbox"
+                                className={styles.checkbox}
+                                checked={Boolean(hasPerm)}
+                                onChange={() => handleTogglePermission(r.id, row.key)}
+                                aria-label={`Grant ${row.label} to ${r.label}`}
+                              />
+                            </label>
+                          ) : hasPerm ? (
                             <span className={styles.checkIcon} title={`Granted for ${r.label}`}>
                               <Check size={18} strokeWidth={2.5} />
                             </span>

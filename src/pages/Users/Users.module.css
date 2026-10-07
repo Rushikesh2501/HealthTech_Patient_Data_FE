@@ -1,0 +1,274 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+  padding: 16px 20px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.searchContainer {
+  flex: 1;
+  min-width: 0;
+}
+
+.filtersGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.clearFiltersBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  background-color: var(--color-primary-subtle);
+  border: 1px solid var(--color-primary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.clearFiltersBtn:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(47, 139, 194, 0.25);
+}
+
+.clearFiltersBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(47, 139, 194, 0.35);
+  background-color: rgba(47, 139, 194, 0.05);
+  color: var(--color-primary);
+  box-shadow: none;
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.userSub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.emailText {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.phoneText {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phoneRestricted {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-style: italic;
+  background-color: var(--color-inactive-light);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border);
+}
+
+.roleBadgeSuperadmin {
+  background-color: #eaf4fb;
+  color: #1d4775;
+  border: 1px solid rgba(29, 71, 117, 0.2);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+.roleBadgeAdmin {
+  background-color: #e8f8f2;
+  color: #0a9f6e;
+  border: 1px solid rgba(10, 159, 110, 0.2);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+.roleBadgeClinician {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+.roleBadgeNurse {
+  background-color: #fff7df;
+  color: #b45309;
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+/* Modal styles for user registration / editing */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modalContent {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: 14px;
+}
+
+.modalTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.closeBtn {
+  color: var(--color-text-muted);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-inactive-light);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 16px;
+}
+
+.privacyNotice {
+  background-color: rgba(47, 139, 194, 0.08);
+  border: 1px solid rgba(47, 139, 194, 0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .filtersGroup {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clearFiltersBtn {
+    width: 100%;
+  }
+
+  .modalActions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .modalActions button {
+    width: 100%;
+  }
+}

@@ -50,11 +50,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setSessionExpiredMessage(customEvent.detail?.message || 'Your session has expired. Please log in again.');
     };
 
+    const handlePermissionsUpdated = () => {
+      setPermissionsRevision((prev) => prev + 1);
+    };
+
     window.addEventListener('pm_session_expired', handleSessionExpired);
+    window.addEventListener('pm_permissions_updated', handlePermissionsUpdated);
     return () => {
       window.removeEventListener('pm_session_expired', handleSessionExpired);
+      window.removeEventListener('pm_permissions_updated', handlePermissionsUpdated);
     };
   }, []);
+
+  const [permissionsRevision, setPermissionsRevision] = useState<number>(0);
 
   const login = useCallback(async (credentials: LoginCredentials): Promise<User> => {
     setIsLoading(true);
@@ -91,9 +99,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const userHasPermission = useCallback(
     (permission: Permission) => {
+      // Consume permissionsRevision to force recalculation on dynamic permission updates
+      if (permissionsRevision < 0) return false;
       return checkPermission(user, permission);
     },
-    [user]
+    [user, permissionsRevision]
   );
 
   const value: AuthContextType = {

@@ -13,6 +13,7 @@ export const ROUTES = {
   PATIENT_DETAILS: '/patients/:id',
   ENCOUNTERS: '/encounters',
   ANALYTICS: '/analytics',
+  USERS: '/users',
   AUDIT_LOGS: '/audit-logs',
   AUDIT_LOG_DETAILS: '/audit-logs/:id',
   SETTINGS: '/settings',

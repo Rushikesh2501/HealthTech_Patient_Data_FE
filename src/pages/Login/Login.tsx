@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styles from './Login.module.css';
-import { Activity, AlertCircle, Info, Lock } from 'lucide-react';
+import { Activity, AlertCircle, CheckCircle2, Info, Lock } from 'lucide-react';
 import { loginSchema, LoginSchemaType } from '../../utils/validators';
 import { useAuth } from '../../hooks/useAuth';
 import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
@@ -18,6 +18,7 @@ export const Login: React.FC = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  const successMessage = (location.state as any)?.message || (location.state as any)?.successMessage;
   const from = (location.state as any)?.from?.pathname || ROUTES.DASHBOARD;
 
   const {
@@ -75,6 +76,13 @@ export const Login: React.FC = () => {
           <div className={`${styles.alertBox} ${styles.alertInfo}`} role="alert">
             <Info size={16} />
             <span>{sessionExpiredMessage}</span>
+          </div>
+        )}
+
+        {successMessage && (
+          <div className={`${styles.alertBox} ${styles.alertSuccess}`} role="alert">
+            <CheckCircle2 size={16} />
+            <span>{successMessage}</span>
           </div>
         )}
 

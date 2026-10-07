@@ -11,6 +11,7 @@ const getPageTitle = (pathname: string): string => {
   if (pathname === ROUTES.PATIENTS) return 'Patient Directory';
   if (pathname === ROUTES.ENCOUNTERS) return 'Patient Encounters';
   if (pathname === ROUTES.ANALYTICS) return 'Clinical Analytics';
+  if (pathname === ROUTES.USERS) return 'User Directory';
   if (pathname.startsWith('/audit-logs/')) return 'Audit Event Details';
   if (pathname === ROUTES.AUDIT_LOGS) return 'Security & Audit Logs';
   if (pathname === ROUTES.SETTINGS) return 'System Settings';

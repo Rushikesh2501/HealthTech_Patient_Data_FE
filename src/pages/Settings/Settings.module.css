@@ -68,8 +68,37 @@
   color: var(--color-text-primary);
 }
 
+.securityCard {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.securityActionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.securityNote {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  max-width: 560px;
+}
+
 @media (max-width: 900px) {
   .cardGrid {
     grid-template-columns: 1fr;
   }
 }
+
