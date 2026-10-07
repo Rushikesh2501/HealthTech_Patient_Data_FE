@@ -91,7 +91,7 @@ export const Settings: React.FC = () => {
           <div>
             <div className={styles.infoRow}>
               <span className={styles.label}>Active Roles</span>
-              <span className={styles.value}>ADMIN, CLINICIAN, NURSE</span>
+              <span className={styles.value}>SUPERADMIN, ADMIN, CLINICIAN, NURSE</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.label}>Authorization Engine</span>

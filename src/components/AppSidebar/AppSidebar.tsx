@@ -156,7 +156,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               {user?.name || 'Authenticated User'}
             </span>
             <span className={styles.userRole}>
-              {user?.role || 'Clinician'}
+              {user?.role ? user.role.toUpperCase() : 'CLINICIAN'}
             </span>
           </div>
         </div>
