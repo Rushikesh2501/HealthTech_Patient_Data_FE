@@ -49,6 +49,7 @@ export const Patients: React.FC = () => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<PatientSchemaType>({
     resolver: zodResolver(patientSchema),
@@ -60,6 +61,20 @@ export const Patients: React.FC = () => {
       status: 'active',
     },
   });
+
+  const watchedName = watch('name');
+  const watchedAge = watch('age');
+  const watchedGender = watch('gender');
+  const watchedDistrict = watch('district');
+
+  const isFormIncomplete =
+    !watchedName?.trim() ||
+    watchedAge === undefined ||
+    watchedAge === null ||
+    (typeof watchedAge === 'string' && (watchedAge as string).trim() === '') ||
+    isNaN(Number(watchedAge)) ||
+    !watchedGender ||
+    !watchedDistrict?.trim();
 
   // Check if navigation requested opening register modal
   useEffect(() => {
@@ -109,6 +124,7 @@ export const Patients: React.FC = () => {
   };
 
   const onFormSubmit = async (data: PatientSchemaType) => {
+    const patientStatus = data.status || editingPatient?.status || 'active';
     if (editingPatient) {
       await updatePatientMutation.mutateAsync({
         id: editingPatient.id,
@@ -117,7 +133,7 @@ export const Patients: React.FC = () => {
           age: data.age,
           gender: data.gender,
           district: data.district,
-          status: data.status,
+          status: patientStatus,
         },
       });
     } else {
@@ -126,7 +142,7 @@ export const Patients: React.FC = () => {
         age: data.age,
         gender: data.gender,
         district: data.district,
-        status: data.status,
+        status: patientStatus,
       });
     }
     handleCloseModal();
@@ -346,23 +362,13 @@ export const Patients: React.FC = () => {
                 {...register('district')}
               />
 
-              <FormField
-                as="select"
-                label="Status"
-                error={errors.status?.message as string | undefined}
-                {...register('status')}
-              >
-                <option value="" disabled>Select patient status...</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </FormField>
-
               <div className={styles.modalActions}>
                 <SecondaryButton type="button" onClick={handleCloseModal}>
                   Cancel
                 </SecondaryButton>
                 <PrimaryButton
                   type="submit"
+                  disabled={isFormIncomplete}
                   isLoading={createPatientMutation.isPending || updatePatientMutation.isPending}
                 >
                   {editingPatient ? 'Save Changes' : 'Register Patient'}

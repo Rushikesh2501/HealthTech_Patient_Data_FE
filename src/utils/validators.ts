@@ -5,7 +5,9 @@ export const loginSchema = z.object({
   email: z
     .string()
     .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
+    .refine((val) => /^[^\s@]+@[^\s@]+$/.test(val), {
+      message: 'Please enter a valid email address',
+    }),
   password: z
     .string()
     .min(1, 'Password is required')
@@ -68,7 +70,7 @@ export const patientSchema = z.object({
     .refine((val) => val >= 0 && val <= 130, { message: 'Age must be between 0 and 130' }),
   gender: z.enum(GENDER_VALUES, { errorMap: () => ({ message: 'Please select a gender' }) }),
   district: z.string().min(2, 'District / health center is required'),
-  status: z.enum(PATIENT_STATUS_VALUES),
+  status: z.enum(PATIENT_STATUS_VALUES).default('active'),
 });
 
 export type PatientSchemaType = z.infer<typeof patientSchema>;

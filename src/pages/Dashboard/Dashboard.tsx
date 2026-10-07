@@ -43,10 +43,15 @@ import {
   useDiagnosisTrends,
   useAgeDistribution,
 } from '../../hooks/useDashboard';
+import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../utils/constants';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { hasPermission } = useAuth();
+  const canRegisterPatient = hasPermission('patients.create');
+  const canAddEncounter = hasPermission('encounters.create');
+
   const [dateRange, setDateRange] = useState<string>('7d');
   const [customStart, setCustomStart] = useState<string>('');
   const [customEnd, setCustomEnd] = useState<string>('');
@@ -109,13 +114,33 @@ export const Dashboard: React.FC = () => {
           <>
             <SecondaryButton
               icon={<UserPlus size={16} />}
-              onClick={() => navigate(ROUTES.PATIENTS, { state: { openRegister: true } })}
+              onClick={() => {
+                if (canRegisterPatient) {
+                  navigate(ROUTES.PATIENTS, { state: { openRegister: true } });
+                }
+              }}
+              disabled={!canRegisterPatient}
+              title={
+                !canRegisterPatient
+                  ? 'Access Restricted: You do not have permission to register patients.'
+                  : 'Register a new patient'
+              }
             >
               Register Patient
             </SecondaryButton>
             <PrimaryButton
               icon={<PlusCircle size={16} />}
-              onClick={() => navigate(ROUTES.ENCOUNTERS, { state: { openNew: true } })}
+              onClick={() => {
+                if (canAddEncounter) {
+                  navigate(ROUTES.ENCOUNTERS, { state: { openNew: true } });
+                }
+              }}
+              disabled={!canAddEncounter}
+              title={
+                !canAddEncounter
+                  ? 'Access Restricted: You do not have permission to record encounters.'
+                  : 'Record a new clinical encounter'
+              }
             >
               Add Encounter
             </PrimaryButton>
