@@ -213,7 +213,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 <option value="">Select a registered patient...</option>
                 {patients.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.patientId} - {p.gender}, {p.age} yrs ({p.district})
+                    {p.name ? `${p.name} (${p.patientId})` : p.patientId} - {p.gender}, {p.age} yrs ({p.district})
                   </option>
                 ))}
               </FormField>

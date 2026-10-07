@@ -58,6 +58,7 @@ export const GENDER_VALUES = ['Male', 'Female', 'Other'] as const;
 export const PATIENT_STATUS_VALUES = ['active', 'inactive'] as const;
 
 export const patientSchema = z.object({
+  name: z.string().min(2, 'Patient name must be at least 2 characters').max(100, 'Name is too long'),
   age: z
     .number()
     .int('Age must be a whole number')

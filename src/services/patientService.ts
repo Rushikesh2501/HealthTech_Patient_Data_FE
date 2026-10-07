@@ -45,6 +45,7 @@ export const patientService = {
     const newPatient: Patient = {
       id: `p-${Date.now()}`,
       patientId,
+      name: data.name || `Patient ${patientId}`,
       age: Number(data.age),
       gender: data.gender,
       registrationDate: new Date().toISOString(),

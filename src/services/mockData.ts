@@ -32,6 +32,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-1',
     patientId: 'PT-0001',
+    name: 'Sunita Patil',
     age: 42,
     gender: 'Female',
     registrationDate: '2026-01-12T09:30:00Z',
@@ -43,6 +44,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-2',
     patientId: 'PT-0002',
+    name: 'Ramesh Kulkarni',
     age: 58,
     gender: 'Male',
     registrationDate: '2026-02-05T11:00:00Z',
@@ -54,6 +56,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-3',
     patientId: 'PT-0003',
+    name: 'Priyanka Jadhav',
     age: 26,
     gender: 'Female',
     registrationDate: '2026-03-18T08:45:00Z',
@@ -65,6 +68,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-4',
     patientId: 'PT-0004',
+    name: 'Babanrao Shinde',
     age: 67,
     gender: 'Male',
     registrationDate: '2026-04-10T14:10:00Z',
@@ -76,6 +80,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-5',
     patientId: 'PT-0005',
+    name: 'Aarav Deshmukh',
     age: 15,
     gender: 'Other',
     registrationDate: '2026-05-22T10:00:00Z',
@@ -87,6 +92,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-6',
     patientId: 'PT-0006',
+    name: 'Meena Gaikwad',
     age: 34,
     gender: 'Female',
     registrationDate: '2026-06-03T16:20:00Z',
@@ -98,6 +104,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-7',
     patientId: 'PT-0007',
+    name: 'Vikas Bhosale',
     age: 51,
     gender: 'Male',
     registrationDate: '2026-07-15T09:15:00Z',
@@ -109,6 +116,7 @@ export const INITIAL_PATIENTS: Patient[] = [
   {
     id: 'p-8',
     patientId: 'PT-0008',
+    name: 'Kavita Salunkhe',
     age: 29,
     gender: 'Female',
     registrationDate: '2026-08-01T13:40:00Z',

@@ -55,6 +55,7 @@ export const Patients: React.FC = () => {
   } = useForm<PatientSchemaType>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
+      name: '',
       age: 30,
       gender: 'Male',
       district: 'Raigad Rural Clinic',
@@ -74,6 +75,7 @@ export const Patients: React.FC = () => {
     if (patient) {
       setEditingPatient(patient);
       reset({
+        name: patient.name || '',
         age: patient.age,
         gender: patient.gender,
         district: patient.district || '',
@@ -82,6 +84,7 @@ export const Patients: React.FC = () => {
     } else {
       setEditingPatient(null);
       reset({
+        name: '',
         age: 32,
         gender: 'Female',
         district: 'Rural Health Center',
@@ -101,6 +104,7 @@ export const Patients: React.FC = () => {
       await updatePatientMutation.mutateAsync({
         id: editingPatient.id,
         data: {
+          name: data.name,
           age: data.age,
           gender: data.gender,
           district: data.district,
@@ -109,6 +113,7 @@ export const Patients: React.FC = () => {
       });
     } else {
       await createPatientMutation.mutateAsync({
+        name: data.name,
         age: data.age,
         gender: data.gender,
         district: data.district,
@@ -135,6 +140,7 @@ export const Patients: React.FC = () => {
     return patients.filter((patient) => {
       const matchesSearch =
         !searchTerm ||
+        (patient.name && patient.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
         patient.patientId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (patient.district && patient.district.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -150,12 +156,12 @@ export const Patients: React.FC = () => {
       id: 'patient',
       header: 'Patient Record',
       sortable: true,
-      accessor: (p) => p.patientId,
+      accessor: (p) => p.name || p.patientId,
       cell: (row) => (
         <div className={styles.patientCell}>
-          <Avatar name={`Patient ${row.patientId}`} size="sm" />
+          <Avatar name={row.name || `Patient ${row.patientId}`} size="sm" />
           <div className={styles.patientMeta}>
-            <span className={styles.patientName}>{row.patientId}</span>
+            <span className={styles.patientName}>{row.name || row.patientId}</span>
             <span className={styles.patientSub}>{row.district || 'Rural Center'}</span>
           </div>
         </div>
@@ -163,7 +169,7 @@ export const Patients: React.FC = () => {
     },
     {
       id: 'patientId',
-      header: 'Anonymized ID',
+      header: 'Patient ID',
       sortable: true,
       accessor: 'patientId',
       cell: (row) => <span className={styles.patientIdBadge}>{row.patientId}</span>,
@@ -234,7 +240,7 @@ export const Patients: React.FC = () => {
         <SearchBar
           value={searchTerm}
           onChange={setSearchTerm}
-          placeholder="Search by PT-ID or clinic..."
+          placeholder="Search by patient name, ID, or clinic..."
         />
 
         <div className={styles.filtersGroup}>
@@ -313,6 +319,14 @@ export const Patients: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit(onFormSubmit)} className={styles.form} noValidate>
+              <FormField
+                label="Full Name"
+                placeholder="e.g. Ramesh Kulkarni"
+                error={errors.name?.message}
+                required
+                {...register('name')}
+              />
+
               <FormField
                 label="Age (Years)"
                 type="number"

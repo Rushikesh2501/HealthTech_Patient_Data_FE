@@ -127,7 +127,7 @@ export const PatientDetails: React.FC = () => {
   return (
     <PageContainer>
       <PageHeader
-        title={`Patient Details - ${patient.patientId}`}
+        title={patient.name ? `${patient.name} (${patient.patientId})` : `Patient Details - ${patient.patientId}`}
         subtitle="Review demographic details and longitudinal clinical encounter history."
         action={
           <SecondaryButton
@@ -142,13 +142,15 @@ export const PatientDetails: React.FC = () => {
       {/* Patient Profile Card */}
       <div className={styles.profileCard}>
         <div className={styles.profileLeft}>
-          <Avatar name={`Patient ${patient.patientId}`} size="lg" />
+          <Avatar name={patient.name || `Patient ${patient.patientId}`} size="lg" />
           <div className={styles.profileInfo}>
             <div className={styles.patientIdTitle}>
-              <span>{patient.patientId}</span>
+              <span>{patient.name || patient.patientId}</span>
               <StatusBadge status={patient.status} />
             </div>
-            <p className={styles.clinicSub}>{patient.district || 'Rural Telemedicine Clinic'}</p>
+            <p className={styles.clinicSub}>
+              <strong style={{ color: 'var(--color-primary-600, #2563eb)' }}>{patient.patientId}</strong> • {patient.district || 'Rural Telemedicine Clinic'}
+            </p>
           </div>
         </div>
 
