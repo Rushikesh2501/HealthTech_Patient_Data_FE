@@ -1,7 +1,17 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { STORAGE_KEYS } from '../utils/constants';
 
-const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
+const getBaseURL = () => {
+  const envUrl = process.env.REACT_APP_API_URL?.trim();
+  if (!envUrl) return 'http://localhost:8000/api/v1';
+  const clean = envUrl.replace(/\/+$/, '');
+  if (!clean.endsWith('/api/v1') && !clean.endsWith('/api')) {
+    return `${clean}/api/v1`;
+  }
+  return clean;
+};
+
+const baseURL = getBaseURL();
 
 export const apiClient = axios.create({
   baseURL,
