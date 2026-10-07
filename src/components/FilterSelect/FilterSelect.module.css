@@ -37,6 +37,10 @@
   display: none;
 }
 
+.select option[value=""] {
+  color: #8fa0b5;
+}
+
 .select:hover {
   border-color: #BACDDF;
 }

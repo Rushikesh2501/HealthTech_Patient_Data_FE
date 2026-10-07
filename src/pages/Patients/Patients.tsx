@@ -56,9 +56,9 @@ export const Patients: React.FC = () => {
     resolver: zodResolver(patientSchema),
     defaultValues: {
       name: '',
-      age: 30,
-      gender: 'Male',
-      district: 'Raigad Rural Clinic',
+      age: '' as any,
+      gender: '' as any,
+      district: '',
       status: 'active',
     },
   });
@@ -85,9 +85,9 @@ export const Patients: React.FC = () => {
       setEditingPatient(null);
       reset({
         name: '',
-        age: 32,
-        gender: 'Female',
-        district: 'Rural Health Center',
+        age: '' as any,
+        gender: '' as any,
+        district: '',
         status: 'active',
       });
     }
@@ -343,6 +343,7 @@ export const Patients: React.FC = () => {
                 required
                 {...register('gender')}
               >
+                <option value="" disabled>Select patient gender...</option>
                 {GENDER_OPTIONS.map((g) => (
                   <option key={g.value} value={g.value}>
                     {g.label}
@@ -364,6 +365,7 @@ export const Patients: React.FC = () => {
                 error={errors.status?.message as string | undefined}
                 {...register('status')}
               >
+                <option value="" disabled>Select patient status...</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </FormField>

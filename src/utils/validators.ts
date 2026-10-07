@@ -60,11 +60,13 @@ export const PATIENT_STATUS_VALUES = ['active', 'inactive'] as const;
 export const patientSchema = z.object({
   name: z.string().min(2, 'Patient name must be at least 2 characters').max(100, 'Name is too long'),
   age: z
-    .number()
-    .int('Age must be a whole number')
-    .min(0, 'Age cannot be negative')
-    .max(130, 'Please enter a valid age'),
-  gender: z.enum(GENDER_VALUES),
+    .preprocess(
+      (val) => (val === '' || val === undefined || (typeof val === 'number' && isNaN(val)) ? undefined : Number(val)),
+      z.number({ required_error: 'Age is required', invalid_type_error: 'Age must be a valid number' })
+    )
+    .refine((val) => Number.isInteger(val), { message: 'Age must be a whole number' })
+    .refine((val) => val >= 0 && val <= 130, { message: 'Age must be between 0 and 130' }),
+  gender: z.enum(GENDER_VALUES, { errorMap: () => ({ message: 'Please select a gender' }) }),
   district: z.string().min(2, 'District / health center is required'),
   status: z.enum(PATIENT_STATUS_VALUES),
 });

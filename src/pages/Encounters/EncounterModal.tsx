@@ -35,13 +35,13 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
   const [hasDraftRestored, setHasDraftRestored] = useState(false);
 
   const defaultValues: Partial<EncounterSchemaType> = {
-    patientId: initialPatientId || (patients[0]?.id ?? ''),
+    patientId: initialPatientId || '',
     encounterDate: new Date().toISOString().slice(0, 10),
     symptoms: '',
-    diagnosis: COMMON_DIAGNOSES[0],
+    diagnosis: '',
     treatment: '',
-    temperature: '98.6',
-    bloodPressure: '120/80',
+    temperature: '',
+    bloodPressure: '',
     status: 'completed',
     notes: '',
   };
@@ -245,6 +245,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 required
                 {...register('diagnosis')}
               >
+                <option value="" disabled>Select primary clinical diagnosis...</option>
                 {COMMON_DIAGNOSES.map((diag) => (
                   <option key={diag} value={diag}>
                     {diag}
@@ -258,6 +259,7 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
                 error={errors.status?.message as string | undefined}
                 {...register('status')}
               >
+                <option value="" disabled>Select encounter status...</option>
                 {STATUS_OPTIONS.map((st) => (
                   <option key={st.value} value={st.value}>
                     {st.label}
@@ -299,8 +301,10 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
             </div>
 
             <FormField
+              as="textarea"
               label="Clinical Telemedicine Notes (Optional)"
               placeholder="Private clinician observations or referral flags..."
+              rows={2}
               {...register('notes')}
             />
           </div>

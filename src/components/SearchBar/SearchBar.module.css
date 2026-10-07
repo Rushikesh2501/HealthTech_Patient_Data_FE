@@ -28,7 +28,9 @@
 }
 
 .input::placeholder {
-  color: var(--color-text-muted);
+  color: #8fa0b5 !important;
+  opacity: 0.85 !important;
+  font-weight: 400 !important;
 }
 
 .input:focus {

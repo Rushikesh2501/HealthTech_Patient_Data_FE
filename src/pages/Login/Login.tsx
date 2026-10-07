@@ -98,7 +98,7 @@ export const Login: React.FC = () => {
           <FormField
             label="Password"
             type="password"
-            placeholder="••••••••••••"
+            placeholder="Enter your security password..."
             error={errors.password?.message}
             required
             {...register('password')}
