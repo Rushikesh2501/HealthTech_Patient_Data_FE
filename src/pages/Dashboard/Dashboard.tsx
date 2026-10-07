@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import {
@@ -68,6 +68,19 @@ export const Dashboard: React.FC = () => {
     data: ageData,
     isLoading: isAgeLoading,
   } = useAgeDistribution();
+
+  // Top 5 diagnoses only, sorted descending by encounter count
+  const top5DiagnosisData = useMemo(() => {
+    if (!diagnosisData || !Array.isArray(diagnosisData)) return [];
+    const colors = ['#2F8BC2', '#0A9F6E', '#F2A900', '#FF5C70', '#8B5CF6'];
+    return [...diagnosisData]
+      .sort((a, b) => (b.count || 0) - (a.count || 0))
+      .slice(0, 5)
+      .map((item, index) => ({
+        ...item,
+        color: item.color || colors[index % colors.length],
+      }));
+  }, [diagnosisData]);
 
   const isLoading = isSummaryLoading || isTrendsLoading || isDiagnosisLoading || isAgeLoading;
 
@@ -215,14 +228,14 @@ export const Dashboard: React.FC = () => {
           <div className={styles.chartHeader}>
             <div>
               <h3 className={styles.chartTitle}>Diagnosis Distribution</h3>
-              <p className={styles.chartSubtitle}>Top clinical diagnoses recorded</p>
+              <p className={styles.chartSubtitle}>Top 5 clinical diagnoses recorded</p>
             </div>
           </div>
           <div className={styles.chartWrapper}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={diagnosisData || []}
+                  data={top5DiagnosisData}
                   cx="50%"
                   cy="45%"
                   innerRadius={50}
@@ -230,7 +243,7 @@ export const Dashboard: React.FC = () => {
                   paddingAngle={4}
                   dataKey="count"
                 >
-                  {(diagnosisData || []).map((entry, index) => (
+                  {top5DiagnosisData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color || '#2F8BC2'} />
                   ))}
                 </Pie>
@@ -241,10 +254,11 @@ export const Dashboard: React.FC = () => {
                     border: '1px solid #D9E5F1',
                     fontSize: '12px',
                   }}
+                  formatter={(val: any, name: any) => [`${val} encounters`, name]}
                 />
                 <Legend
                   verticalAlign="bottom"
-                  height={36}
+                  height={48}
                   formatter={(value) => (
                     <span style={{ fontSize: '11px', color: '#687386' }}>{value}</span>
                   )}

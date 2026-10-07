@@ -28,9 +28,14 @@ export const dashboardApi = {
   /**
    * Fetch distribution of diagnoses directly from FastAPI
    */
-  async getDiagnosisDistribution(): Promise<DiagnosisDistributionPoint[]> {
-    const res = await apiClient.get<any>('/dashboard/diagnoses');
-    return Array.isArray(res.data) ? res.data : res.data?.diagnoses || [];
+  async getDiagnosisDistribution(limit: number = 5): Promise<DiagnosisDistributionPoint[]> {
+    const res = await apiClient.get<any>('/dashboard/diagnoses', {
+      params: { limit },
+    });
+    const items: DiagnosisDistributionPoint[] = Array.isArray(res.data) ? res.data : res.data?.diagnoses || [];
+    return items
+      .sort((a, b) => (b.count || 0) - (a.count || 0))
+      .slice(0, limit);
   },
 
   /**
