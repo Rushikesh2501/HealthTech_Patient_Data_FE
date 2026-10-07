@@ -12,7 +12,6 @@ import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { FilterSelect } from '../../components/FilterSelect/FilterSelect';
 import { DataTable, Column } from '../../components/DataTable/DataTable';
 import { Avatar } from '../../components/Avatar/Avatar';
-import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { RowActions } from '../../components/RowActions/RowActions';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog';
 import { FormField } from '../../components/FormField/FormField';
@@ -136,6 +135,8 @@ export const Patients: React.FC = () => {
     setStatusFilter('');
   };
 
+  const hasActiveFilters = Boolean(searchTerm || genderFilter || statusFilter);
+
   const filteredPatients = useMemo(() => {
     return patients.filter((patient) => {
       const matchesSearch =
@@ -154,7 +155,7 @@ export const Patients: React.FC = () => {
   const columns: Column<Patient>[] = [
     {
       id: 'patient',
-      header: 'Patient Record',
+      header: 'Patient Name',
       sortable: true,
       accessor: (p) => p.name || p.patientId,
       cell: (row) => (
@@ -172,40 +173,24 @@ export const Patients: React.FC = () => {
       header: 'Patient ID',
       sortable: true,
       accessor: 'patientId',
+      align: 'center',
+      hideOnMobile: true,
       cell: (row) => <span className={styles.patientIdBadge}>{row.patientId}</span>,
-    },
-    {
-      id: 'age',
-      header: 'Age',
-      sortable: true,
-      accessor: 'age',
-      cell: (row) => <span>{row.age} yrs</span>,
-    },
-    {
-      id: 'gender',
-      header: 'Gender',
-      sortable: true,
-      accessor: 'gender',
-      cell: (row) => <span>{row.gender}</span>,
     },
     {
       id: 'registrationDate',
       header: 'Registration Date',
       sortable: true,
       accessor: 'registrationDate',
+      align: 'center',
+      hideOnMobile: true,
       cell: (row) => <span>{formatDate(row.registrationDate)}</span>,
-    },
-    {
-      id: 'status',
-      header: 'Status',
-      sortable: true,
-      accessor: 'status',
-      cell: (row) => <StatusBadge status={row.status} />,
     },
     {
       id: 'actions',
       header: 'Actions',
-      align: 'right',
+      align: 'center',
+      width: 140,
       cell: (row) => (
         <RowActions
           onView={() => navigate(`/patients/${row.id}`)}
@@ -237,11 +222,13 @@ export const Patients: React.FC = () => {
 
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <SearchBar
-          value={searchTerm}
-          onChange={setSearchTerm}
-          placeholder="Search by patient name, ID, or clinic..."
-        />
+        <div className={styles.searchContainer}>
+          <SearchBar
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by patient name, ID, or clinic..."
+          />
+        </div>
 
         <div className={styles.filtersGroup}>
           <FilterSelect
@@ -261,15 +248,17 @@ export const Patients: React.FC = () => {
             placeholder="All Statuses"
           />
 
-          {(searchTerm || genderFilter || statusFilter) && (
-            <SecondaryButton
-              icon={<RotateCcw size={14} />}
-              onClick={clearFilters}
-              size="sm"
-            >
-              Clear Filters
-            </SecondaryButton>
-          )}
+          <button
+            type="button"
+            className={styles.clearFiltersBtn}
+            onClick={clearFilters}
+            disabled={!hasActiveFilters}
+            aria-label="Clear filters"
+            title={hasActiveFilters ? 'Clear all active filters' : 'No active filters to clear'}
+          >
+            <RotateCcw size={14} />
+            <span>Clear Filters</span>
+          </button>
         </div>
       </div>
 

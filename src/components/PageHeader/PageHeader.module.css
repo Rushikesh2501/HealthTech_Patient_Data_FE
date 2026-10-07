@@ -32,13 +32,27 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
+  }
+
+  .textGroup {
+    width: 100%;
   }
   
   .actions {
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .actions > * {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
   }
 }

@@ -65,6 +65,10 @@
   height: 280px;
 }
 
+.donutWrapper {
+  height: 340px;
+}
+
 .bottomGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -85,13 +89,20 @@
   }
 }
 
+@media (max-width: 768px) {
+  .controlsBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
 @media (max-width: 640px) {
   .statsGrid {
     grid-template-columns: 1fr;
   }
 
-  .controlsBar {
-    flex-direction: column;
-    align-items: flex-start;
+  .donutWrapper {
+    height: 360px;
   }
 }

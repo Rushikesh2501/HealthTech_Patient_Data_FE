@@ -9,6 +9,10 @@ import {
   PlusCircle,
   UserPlus,
   Calendar,
+  Target,
+  Megaphone,
+  Share2,
+  TrendingUp,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -231,15 +235,15 @@ export const Dashboard: React.FC = () => {
               <p className={styles.chartSubtitle}>Top 5 clinical diagnoses recorded</p>
             </div>
           </div>
-          <div className={styles.chartWrapper}>
+          <div className={`${styles.chartWrapper} ${styles.donutWrapper}`}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={top5DiagnosisData}
                   cx="50%"
-                  cy="45%"
-                  innerRadius={50}
-                  outerRadius={75}
+                  cy="36%"
+                  innerRadius={46}
+                  outerRadius={70}
                   paddingAngle={4}
                   dataKey="count"
                 >
@@ -258,7 +262,10 @@ export const Dashboard: React.FC = () => {
                 />
                 <Legend
                   verticalAlign="bottom"
-                  height={48}
+                  wrapperStyle={{
+                    paddingTop: '8px',
+                    lineHeight: '1.4',
+                  }}
                   formatter={(value) => (
                     <span style={{ fontSize: '11px', color: '#687386' }}>{value}</span>
                   )}
@@ -312,15 +319,33 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Recent Activity Card */}
+        {/* Outreach & Patient Acquisition Marketing Card */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div>
-              <h3 className={styles.chartTitle}>Program Implementation Status</h3>
-              <p className={styles.chartSubtitle}>Rural Health Center Telemedicine Network</p>
+              <h3 className={styles.chartTitle}>Outreach & Patient Acquisition</h3>
+              <p className={styles.chartSubtitle}>Active community campaigns & referral channels</p>
             </div>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 10px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(10, 159, 110, 0.1)',
+                color: 'var(--color-success)',
+                fontSize: '11px',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <TrendingUp size={12} />
+              +18.4% MoM
+            </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '10px' }}>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>
             <div
               style={{
                 display: 'flex',
@@ -330,25 +355,41 @@ export const Dashboard: React.FC = () => {
                 borderRadius: '8px',
                 backgroundColor: 'var(--color-primary-subtle)',
                 border: '1px solid var(--color-border-light)',
+                gap: '12px',
               }}
             >
-              <div>
-                <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-primary-dark)' }}>
-                  Active Primary Health Sub-Centers
-                </p>
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                  Raigad, Pune, Nashik, Satara, Solapur
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(47, 139, 194, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Target size={18} color="var(--color-primary)" />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-primary-dark)', margin: 0 }}>
+                    Community Screening Camps
+                  </p>
+                  <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', margin: '2px 0 0 0' }}>
+                    Rural mobile clinics • 1,420 Reached
+                  </p>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--color-primary)' }}>
+                  +385
+                </span>
+                <p style={{ fontSize: '11px', color: 'var(--color-success)', fontWeight: 600, margin: '2px 0 0 0' }}>
+                  27.1% Conv.
                 </p>
               </div>
-              <span
-                style={{
-                  fontWeight: 700,
-                  fontSize: '16px',
-                  color: 'var(--color-primary)',
-                }}
-              >
-                5 Hubs
-              </span>
             </div>
 
             <div
@@ -360,19 +401,41 @@ export const Dashboard: React.FC = () => {
                 borderRadius: '8px',
                 backgroundColor: '#F8FAFD',
                 border: '1px solid var(--color-border-light)',
+                gap: '12px',
               }}
             >
-              <div>
-                <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text-primary)' }}>
-                  Encryption & Anonymization
-                </p>
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                  De-identified identifiers (PT-XXXX) active
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(242, 169, 0, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Megaphone size={18} color="#D97706" />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text-primary)', margin: 0 }}>
+                    Digital & Telehealth Ads
+                  </p>
+                  <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', margin: '2px 0 0 0' }}>
+                    Preventive awareness • 860 Inquiries
+                  </p>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--color-text-primary)' }}>
+                  +214
+                </span>
+                <p style={{ fontSize: '11px', color: 'var(--color-success)', fontWeight: 600, margin: '2px 0 0 0' }}>
+                  24.8% Conv.
                 </p>
               </div>
-              <span style={{ fontWeight: 600, fontSize: '12px', color: 'var(--color-success)' }}>
-                Compliant
-              </span>
             </div>
 
             <div
@@ -384,19 +447,41 @@ export const Dashboard: React.FC = () => {
                 borderRadius: '8px',
                 backgroundColor: '#F8FAFD',
                 border: '1px solid var(--color-border-light)',
+                gap: '12px',
               }}
             >
-              <div>
-                <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text-primary)' }}>
-                  FastAPI Backend Endpoint
-                </p>
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                  Ready for JWT RBAC connection
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(10, 159, 110, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Share2 size={18} color="var(--color-success)" />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text-primary)', margin: 0 }}>
+                    Physician & Center Referrals
+                  </p>
+                  <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', margin: '2px 0 0 0' }}>
+                    Sub-center hubs & GPs • 520 Referred
+                  </p>
+                </div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--color-text-primary)' }}>
+                  +468
+                </span>
+                <p style={{ fontSize: '11px', color: 'var(--color-success)', fontWeight: 600, margin: '2px 0 0 0' }}>
+                  90.0% Conv.
                 </p>
               </div>
-              <span style={{ fontWeight: 600, fontSize: '12px', color: 'var(--color-info)' }}>
-                Ready
-              </span>
             </div>
           </div>
         </div>

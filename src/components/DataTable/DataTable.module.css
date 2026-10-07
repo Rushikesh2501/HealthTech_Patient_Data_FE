@@ -13,6 +13,14 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tableResponsive::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .table {
@@ -91,3 +99,19 @@
 .alignRight {
   text-align: right;
 }
+
+.alignCenter .thContent {
+  justify-content: center;
+}
+
+.alignRight .thContent {
+  justify-content: flex-end;
+}
+
+
+@media (max-width: 768px) {
+  .hideOnMobile {
+    display: none !important;
+  }
+}
+

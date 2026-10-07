@@ -3,7 +3,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 380px;
 }
 
 .icon {
@@ -17,7 +16,7 @@
 
 .input {
   width: 100%;
-  padding: 9px 36px 9px 36px;
+  padding: 9px 14px 9px 38px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
@@ -36,23 +35,4 @@
 .input:focus {
   border-color: var(--color-border-focus);
   box-shadow: 0 0 0 3px rgba(47, 139, 194, 0.15);
-}
-
-.clearButton {
-  position: absolute;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  color: var(--color-text-muted);
-  background-color: transparent;
-  transition: all var(--transition-fast);
-}
-
-.clearButton:hover {
-  background-color: var(--color-inactive-light);
-  color: var(--color-text-primary);
 }

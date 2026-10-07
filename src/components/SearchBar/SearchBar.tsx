@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import styles from './SearchBar.module.css';
-import { Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export interface SearchBarProps {
   value: string;
@@ -23,10 +23,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     onChange(e.target.value);
   };
 
-  const handleClear = () => {
-    onChange('');
-  };
-
   return (
     <div className={`${styles.wrapper} ${className}`.trim()}>
       <span className={styles.icon} aria-hidden="true">
@@ -41,17 +37,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         className={styles.input}
         aria-label={ariaLabel}
       />
-      {value && (
-        <button
-          type="button"
-          onClick={handleClear}
-          className={styles.clearButton}
-          aria-label="Clear search"
-          title="Clear search"
-        >
-          <X size={14} />
-        </button>
-      )}
     </div>
   );
 };

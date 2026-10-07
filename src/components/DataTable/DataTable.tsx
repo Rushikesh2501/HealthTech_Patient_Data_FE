@@ -14,6 +14,7 @@ export interface Column<T> {
   sortable?: boolean;
   align?: 'left' | 'center' | 'right';
   width?: string | number;
+  hideOnMobile?: boolean;
 }
 
 export interface DataTableProps<T> {
@@ -135,11 +136,13 @@ export function DataTable<T extends Record<string, any>>({
                     ? styles.alignRight
                     : styles.alignLeft;
 
+                const hideClass = col.hideOnMobile ? styles.hideOnMobile : '';
+
                 return (
                   <th
                     key={col.id}
                     style={col.width ? { width: col.width } : undefined}
-                    className={`${styles.th} ${col.sortable ? styles.sortable : ''} ${alignClass}`}
+                    className={`${styles.th} ${col.sortable ? styles.sortable : ''} ${alignClass} ${hideClass}`.trim()}
                     onClick={() => handleSort(col)}
                   >
                     <div className={styles.thContent}>
@@ -210,8 +213,10 @@ export function DataTable<T extends Record<string, any>>({
                       content = row[col.id];
                     }
 
+                    const hideClass = col.hideOnMobile ? styles.hideOnMobile : '';
+
                     return (
-                      <td key={col.id} className={`${styles.td} ${alignClass}`}>
+                      <td key={col.id} className={`${styles.td} ${alignClass} ${hideClass}`.trim()}>
                         {content}
                       </td>
                     );

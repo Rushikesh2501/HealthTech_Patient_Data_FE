@@ -17,6 +17,9 @@
   background-color: transparent;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .presetButton:hover {
@@ -30,35 +33,19 @@
   font-weight: 600;
 }
 
-.customInputs {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding-left: 6px;
-  border-left: 1px solid var(--color-border);
-}
-
-.dateInput {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 4px 6px;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-primary);
-  outline: none;
-}
-
-.dateInput:focus {
-  border-color: var(--color-border-focus);
-}
-
-.separator {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
-}
-
 @media (max-width: 768px) {
   .wrapper {
-    flex-wrap: wrap;
+    display: flex;
     width: 100%;
+    box-sizing: border-box;
+    gap: 4px;
+  }
+
+  .presetButton {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    padding: 8px 6px;
   }
 }
+
