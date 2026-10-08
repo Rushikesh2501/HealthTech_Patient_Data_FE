@@ -15,7 +15,6 @@ import { Encounter } from '../../types/encounter';
 import { useEncounters, useDeleteEncounter } from '../../hooks/useEncounters';
 import { useAuth } from '../../hooks/useAuth';
 import { formatDate } from '../../utils/formatters';
-import { COMMON_DIAGNOSES, STATUS_OPTIONS } from '../../utils/constants';
 
 export const Encounters: React.FC = () => {
   const navigate = useNavigate();
@@ -25,11 +24,9 @@ export const Encounters: React.FC = () => {
   const { data: encounters = [], isLoading, isError, refetch } = useEncounters();
   const deleteMutation = useDeleteEncounter();
 
-  // Filters state
+  // Search and Sort state
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [diagnosisFilter, setDiagnosisFilter] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [dateFilter, setDateFilter] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<string>('');
 
   // Modal & ConfirmDialog state
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -65,36 +62,50 @@ export const Encounters: React.FC = () => {
 
   const clearFilters = () => {
     setSearchTerm('');
-    setDiagnosisFilter('');
-    setStatusFilter('');
-    setDateFilter('');
+    setSortOrder('');
   };
 
-  const hasActiveFilters = Boolean(searchTerm || diagnosisFilter || statusFilter || dateFilter);
+  const hasActiveFilters = Boolean(searchTerm || sortOrder);
+
+  const getEncounterId = (enc: Encounter): string => {
+    return (enc.encounterId || (enc as any).encounter_id || (enc as any).id || '').toString().trim();
+  };
 
   const filteredEncounters = useMemo(() => {
-    return encounters.filter((enc) => {
-      const matchesSearch =
-        !searchTerm ||
-        enc.encounterId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        enc.patientDisplayId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        enc.symptoms?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        enc.clinician?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesDiagnosis = !diagnosisFilter || enc.diagnosis === diagnosisFilter;
-      const matchesStatus = !statusFilter || enc.status === statusFilter;
-      const matchesDate = !dateFilter || enc.date.startsWith(dateFilter);
-
-      return matchesSearch && matchesDiagnosis && matchesStatus && matchesDate;
+    let result = encounters.filter((enc) => {
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      return (
+        getEncounterId(enc).toLowerCase().includes(term) ||
+        enc.patientDisplayId?.toLowerCase().includes(term) ||
+        enc.patientId?.toLowerCase().includes(term) ||
+        enc.symptoms?.toLowerCase().includes(term) ||
+        enc.clinician?.toLowerCase().includes(term) ||
+        enc.diagnosis?.toLowerCase().includes(term)
+      );
     });
-  }, [encounters, searchTerm, diagnosisFilter, statusFilter, dateFilter]);
+
+    if (sortOrder) {
+      result = [...result].sort((a, b) => {
+        const idA = getEncounterId(a);
+        const idB = getEncounterId(b);
+        const comp = idA.localeCompare(idB, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        });
+        return sortOrder === 'asc' ? comp : -comp;
+      });
+    }
+
+    return result;
+  }, [encounters, searchTerm, sortOrder]);
 
   const columns: Column<Encounter>[] = [
     {
       id: 'encounterId',
       header: 'Encounter ID',
       sortable: true,
-      accessor: 'encounterId',
+      accessor: (row) => getEncounterId(row),
       cell: (row) => (
         <span
           className={styles.encounterBadge}
@@ -102,7 +113,7 @@ export const Encounters: React.FC = () => {
           style={{ cursor: 'pointer' }}
           title="View Patient & Encounter Details"
         >
-          {row.encounterId}
+          {getEncounterId(row)}
         </span>
       ),
     },
@@ -156,6 +167,11 @@ export const Encounters: React.FC = () => {
     },
   ];
 
+  const SORT_OPTIONS = [
+    { label: 'A - Z', value: 'asc' },
+    { label: 'Z - A', value: 'desc' },
+  ];
+
   return (
     <PageContainer>
       <PageHeader
@@ -185,31 +201,11 @@ export const Encounters: React.FC = () => {
 
         <div className={styles.filtersGroup}>
           <FilterSelect
-            value={diagnosisFilter}
-            options={COMMON_DIAGNOSES.map((d) => ({ label: d, value: d }))}
-            onChange={setDiagnosisFilter}
-            placeholder="All Diagnoses"
-          />
-
-          <FilterSelect
-            value={statusFilter}
-            options={STATUS_OPTIONS}
-            onChange={setStatusFilter}
-            placeholder="All Statuses"
-          />
-
-          <input
-            type="date"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            style={{
-              padding: '8px 12px',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--color-border)',
-              backgroundColor: 'var(--color-surface)',
-              fontSize: 'var(--font-size-sm)',
-            }}
-            aria-label="Filter by encounter date"
+            value={sortOrder}
+            options={SORT_OPTIONS}
+            onChange={setSortOrder}
+            placeholder="A - Z / Z - A"
+            aria-label="Sort encounters A-Z or Z-A"
           />
 
           <button
@@ -218,7 +214,7 @@ export const Encounters: React.FC = () => {
             onClick={clearFilters}
             disabled={!hasActiveFilters}
             aria-label="Clear filters"
-            title={hasActiveFilters ? 'Clear all active filters' : 'No active filters to clear'}
+            title={hasActiveFilters ? 'Clear search and sorting' : 'No active filters to clear'}
           >
             <RotateCcw size={14} />
             <span>Clear Filters</span>
@@ -228,6 +224,7 @@ export const Encounters: React.FC = () => {
 
       {/* DataTable */}
       <DataTable
+        key={`${sortOrder || 'default'}-${searchTerm}`}
         columns={columns}
         data={filteredEncounters}
         isLoading={isLoading}

@@ -23,6 +23,10 @@
   flex-shrink: 0;
 }
 
+.filtersGroup > div {
+  width: 170px;
+}
+
 .clearFiltersBtn {
   display: inline-flex;
   align-items: center;
@@ -101,14 +105,14 @@
   .filtersGroup {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
 
-  .filtersGroup > div,
-  .filtersGroup > input {
-    flex: 1;
-    min-width: 130px;
+  .filtersGroup > div {
+    width: 100%;
+    min-width: 0;
   }
 
   .clearFiltersBtn {

@@ -94,8 +94,8 @@ export function DataTable<T extends Record<string, any>>({
 
       if (typeof valA === 'string' && typeof valB === 'string') {
         return sortDirection === 'asc'
-          ? valA.localeCompare(valB)
-          : valB.localeCompare(valA);
+          ? valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' })
+          : valB.localeCompare(valA, undefined, { numeric: true, sensitivity: 'base' });
       }
 
       return sortDirection === 'asc'

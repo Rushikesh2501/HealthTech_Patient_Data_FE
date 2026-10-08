@@ -15,7 +15,9 @@ export const encountersApi = {
     return items.map((e: any) => ({
       ...e,
       id: String(e.id),
-      patientId: String(e.patientId),
+      encounterId: e.encounterId || e.encounter_id || (e.id ? `ENC-${e.id}` : ''),
+      patientId: String(e.patientId || e.patient_id || ''),
+      patientDisplayId: e.patientDisplayId || e.patient_display_id || (e.patientId ? `PT-${e.patientId}` : ''),
     }));
   },
 
