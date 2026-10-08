@@ -45,6 +45,18 @@
   transition: all var(--transition-fast);
 }
 
+.inputWithRightElement {
+  padding-right: 44px !important;
+}
+
+.rightElement {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .select {
   appearance: none;
   -webkit-appearance: none;

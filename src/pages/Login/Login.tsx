@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styles from './Login.module.css';
-import { Activity, AlertCircle, CheckCircle2, Info, Lock } from 'lucide-react';
+import { Activity, AlertCircle, CheckCircle2, Info, Lock, Eye, EyeOff } from 'lucide-react';
 import { loginSchema, LoginSchemaType } from '../../utils/validators';
 import { useAuth } from '../../hooks/useAuth';
 import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
@@ -17,6 +17,7 @@ export const Login: React.FC = () => {
 
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const successMessage = (location.state as any)?.message || (location.state as any)?.successMessage;
   const from = (location.state as any)?.from?.pathname || ROUTES.DASHBOARD;
@@ -105,10 +106,22 @@ export const Login: React.FC = () => {
 
           <FormField
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Enter your security password..."
             error={errors.password?.message}
             required
+            rightElement={
+              <button
+                type="button"
+                className={styles.eyeBtn}
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            }
             {...register('password')}
           />
 

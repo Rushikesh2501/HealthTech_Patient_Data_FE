@@ -20,7 +20,6 @@ const DEFAULT_SUGGESTIONS = [
 
 export const AiDoctorChatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(true);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([]);
@@ -130,29 +129,6 @@ export const AiDoctorChatbot: React.FC = () => {
       {/* Floating Mascot Button */}
       {!isOpen && (
         <div className={styles.floatingTrigger}>
-          {showTooltip && (
-            <div
-              className={styles.greetingTooltip}
-              onClick={() => {
-                setShowTooltip(false);
-                setIsOpen(true);
-              }}
-            >
-              <span>👋 Hi! I'm Dr. MediBot. Ask me anything about health & vitals!</span>
-              <button
-                type="button"
-                className={styles.closeTooltipBtn}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowTooltip(false);
-                }}
-                aria-label="Close tooltip"
-              >
-                <X size={12} />
-              </button>
-            </div>
-          )}
-
           <div
             className={styles.botButton}
             onClick={() => setIsOpen(true)}

@@ -13,6 +13,7 @@ interface BaseFieldProps {
 
 export interface TextInputFieldProps extends BaseFieldProps, InputHTMLAttributes<HTMLInputElement> {
   as?: 'input';
+  rightElement?: ReactNode;
 }
 
 export interface TextareaFieldProps extends BaseFieldProps, TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -68,12 +69,24 @@ export const FormField = React.forwardRef<
             </span>
           </>
         ) : (
-          <input
-            id={fieldId}
-            ref={ref as React.Ref<HTMLInputElement>}
-            className={`${styles.input} ${error ? styles.inputError : ''}`.trim()}
-            {...(rest as InputHTMLAttributes<HTMLInputElement>)}
-          />
+          (() => {
+            const { rightElement, ...inputRest } = rest as TextInputFieldProps;
+            return (
+              <>
+                <input
+                  id={fieldId}
+                  ref={ref as React.Ref<HTMLInputElement>}
+                  className={`${styles.input} ${rightElement ? styles.inputWithRightElement : ''} ${error ? styles.inputError : ''}`.trim()}
+                  {...(inputRest as InputHTMLAttributes<HTMLInputElement>)}
+                />
+                {rightElement && (
+                  <div className={styles.rightElement}>
+                    {rightElement}
+                  </div>
+                )}
+              </>
+            );
+          })()
         )}
       </div>
 
