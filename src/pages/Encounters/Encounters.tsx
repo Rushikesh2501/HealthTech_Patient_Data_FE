@@ -8,7 +8,6 @@ import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
 import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { FilterSelect } from '../../components/FilterSelect/FilterSelect';
 import { DataTable, Column } from '../../components/DataTable/DataTable';
-import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { RowActions } from '../../components/RowActions/RowActions';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog';
 import { EncounterModal } from './EncounterModal';
@@ -96,20 +95,29 @@ export const Encounters: React.FC = () => {
       header: 'Encounter ID',
       sortable: true,
       accessor: 'encounterId',
-      cell: (row) => <span className={styles.encounterBadge}>{row.encounterId}</span>,
+      cell: (row) => (
+        <span
+          className={styles.encounterBadge}
+          onClick={() => navigate(`/patients/${row.patientId}`)}
+          style={{ cursor: 'pointer' }}
+          title="View Patient & Encounter Details"
+        >
+          {row.encounterId}
+        </span>
+      ),
     },
     {
       id: 'patient',
-      header: 'Patient',
+      header: 'Patient ID',
       sortable: true,
       accessor: 'patientDisplayId',
       cell: (row) => (
         <span
           className={styles.patientLink}
           onClick={() => navigate(`/patients/${row.patientId}`)}
-          title="View Patient File"
+          title="View Patient & Encounter Details"
         >
-          {row.patientDisplayId}
+          {row.patientDisplayId || row.patientId}
         </span>
       ),
     },
@@ -118,48 +126,23 @@ export const Encounters: React.FC = () => {
       header: 'Date',
       sortable: true,
       accessor: 'date',
+      align: 'center',
+      hideOnMobile: true,
       cell: (row) => <span>{formatDate(row.date)}</span>,
     },
     {
-      id: 'symptoms',
-      header: 'Symptoms',
-      accessor: 'symptoms',
-      cell: (row) => <span className={styles.truncateText} title={row.symptoms}>{row.symptoms}</span>,
-    },
-    {
-      id: 'diagnosis',
-      header: 'Diagnosis',
-      sortable: true,
-      accessor: 'diagnosis',
-      cell: (row) => <span style={{ fontWeight: 600 }}>{row.diagnosis}</span>,
-    },
-    {
-      id: 'vitals',
-      header: 'Vitals',
-      cell: (row) => (
-        <span style={{ fontSize: '13px' }}>
-          {row.temperature}°F • {row.bloodPressure}
-        </span>
-      ),
-    },
-    {
       id: 'clinician',
-      header: 'Clinician',
+      header: 'Staff Name',
       sortable: true,
       accessor: 'clinician',
-      cell: (row) => <span>{row.clinician}</span>,
-    },
-    {
-      id: 'status',
-      header: 'Status',
-      sortable: true,
-      accessor: 'status',
-      cell: (row) => <StatusBadge status={row.status} />,
+      hideOnMobile: true,
+      cell: (row) => <span>{row.clinician || 'Attending Staff'}</span>,
     },
     {
       id: 'actions',
       header: 'Actions',
-      align: 'right',
+      align: 'center',
+      width: 110,
       cell: (row) => (
         <RowActions
           onView={() => navigate(`/patients/${row.patientId}`)}
@@ -167,6 +150,7 @@ export const Encounters: React.FC = () => {
           onDelete={canDelete ? () => setDeletingEncounter(row) : undefined}
           canEdit={canUpdate}
           canDelete={canDelete}
+          viewTitle="View encounter details"
         />
       ),
     },
@@ -195,7 +179,7 @@ export const Encounters: React.FC = () => {
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
-            placeholder="Search by ID, symptoms, clinician..."
+            placeholder="Search by encounter ID, patient ID, staff..."
           />
         </div>
 
