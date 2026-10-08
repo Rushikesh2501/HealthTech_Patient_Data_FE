@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import styles from './DashboardLayout.module.css';
 import { AppSidebar } from '../../components/AppSidebar/AppSidebar';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
+import { AiDoctorChatbot } from '../../components/AiDoctorChatbot/AiDoctorChatbot';
 import { ROUTES } from '../../utils/constants';
 
 const getPageTitle = (pathname: string): string => {
@@ -48,6 +49,9 @@ export const DashboardLayout: React.FC = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Floating 3D AI Doctor Chatbot Mascot */}
+      <AiDoctorChatbot />
     </div>
   );
 };
