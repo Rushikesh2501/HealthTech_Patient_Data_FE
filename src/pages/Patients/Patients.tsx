@@ -123,6 +123,16 @@ export const Patients: React.FC = () => {
     setEditingPatient(null);
   };
 
+  const handleClearAll = () => {
+    reset({
+      name: '',
+      age: '' as any,
+      gender: '' as any,
+      district: '',
+      status: 'active',
+    });
+  };
+
   const onFormSubmit = async (data: PatientSchemaType) => {
     const patientStatus = data.status || editingPatient?.status || 'active';
     if (editingPatient) {
@@ -363,6 +373,9 @@ export const Patients: React.FC = () => {
               />
 
               <div className={styles.modalActions}>
+                <SecondaryButton type="button" onClick={handleClearAll}>
+                  Clear All
+                </SecondaryButton>
                 <SecondaryButton type="button" onClick={handleCloseModal}>
                   Cancel
                 </SecondaryButton>

@@ -220,7 +220,10 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
             </div>
 
             <div className={styles.actions}>
-              <SecondaryButton type="button" onClick={handleClose}>
+              <SecondaryButton type="button" onClick={handleResetForm} disabled={isSubmitting}>
+                Clear All
+              </SecondaryButton>
+              <SecondaryButton type="button" onClick={handleClose} disabled={isSubmitting}>
                 Cancel
               </SecondaryButton>
               <PrimaryButton

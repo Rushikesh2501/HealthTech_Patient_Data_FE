@@ -165,6 +165,20 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
     }
   };
 
+  const handleClearAll = () => {
+    reset({
+      patientId: '',
+      encounterDate: '',
+      symptoms: '',
+      diagnosis: '',
+      treatment: '',
+      temperature: '',
+      bloodPressure: '',
+      status: 'scheduled',
+      notes: '',
+    });
+  };
+
 
 
   return (
@@ -319,6 +333,9 @@ export const EncounterModal: React.FC<EncounterModalProps> = ({
 
 
             <div className={styles.footerRight}>
+              <SecondaryButton type="button" onClick={handleClearAll} disabled={isSubmitting}>
+                Clear All
+              </SecondaryButton>
               <SecondaryButton type="button" onClick={onClose} disabled={isSubmitting}>
                 Cancel
               </SecondaryButton>

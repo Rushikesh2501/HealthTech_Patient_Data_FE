@@ -140,6 +140,15 @@ export const Users: React.FC = () => {
     setFormError(null);
   };
 
+  const handleClearAll = () => {
+    setFormName('');
+    setFormEmail('');
+    setFormPhone('');
+    setFormRole('clinician');
+    setFormPassword('');
+    setFormError(null);
+  };
+
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim()) {
@@ -421,6 +430,9 @@ export const Users: React.FC = () => {
               )}
 
               <div className={styles.modalActions}>
+                <SecondaryButton type="button" onClick={handleClearAll}>
+                  Clear All
+                </SecondaryButton>
                 <SecondaryButton type="button" onClick={handleCloseModal}>
                   Cancel
                 </SecondaryButton>

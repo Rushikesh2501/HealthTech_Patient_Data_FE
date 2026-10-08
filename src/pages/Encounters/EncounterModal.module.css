@@ -161,4 +161,18 @@
   .grid2 {
     grid-template-columns: 1fr;
   }
+
+  .footer {
+    padding: 12px 16px;
+  }
+
+  .footerRight {
+    width: 100%;
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .footerRight button {
+    width: 100%;
+  }
 }

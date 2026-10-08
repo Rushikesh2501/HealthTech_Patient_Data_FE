@@ -189,5 +189,14 @@
     padding: 10px 14px;
     justify-content: center;
   }
+
+  .modalActions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .modalActions button {
+    width: 100%;
+  }
 }
 
